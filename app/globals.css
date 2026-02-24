@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* V-Vibe パレット */
+  --vv-bg:      #13092b;   /* 深い夜空パープル */
+  --vv-surface: #1d1040;   /* カード面・UI面 */
+  --vv-border:  rgba(196, 181, 253, 0.12);  /* ラベンダー薄ボーダー */
+  --vv-text:    #faf5ff;   /* ほんのりラベンダー白 */
 }
 
 @theme inline {
@@ -12,15 +18,25 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  color: var(--vv-text);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+
+  /*
+    ベース: 深いパープルの夜空
+    + 左上に幽かな紫のオーロラ
+    + 右下に幽かなピンクのオーロラ
+    → VTuber配信の背景のような、温かく夢幻的な雰囲気
+  */
+  background:
+    radial-gradient(ellipse 65% 55% at 10% 5%,  rgba(139, 92, 246, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 45% at 90% 95%,  rgba(244, 114, 182, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(109, 40, 217, 0.05) 0%, transparent 80%),
+    var(--vv-bg);
+  min-height: 100dvh;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* スクロール時も背景が途切れないよう html にも適用 */
+html {
+  background: var(--vv-bg);
 }
