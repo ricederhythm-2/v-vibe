@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { LogOut, Pencil, UserPlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useMyProfile } from '@/hooks/useMyProfile';
 import type { User } from '@supabase/supabase-js';
 
 const BRAND = '#EF5285';
@@ -14,6 +16,7 @@ export default function UserMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router   = useRouter();
   const supabase = createClient();
+  const { profile } = useMyProfile();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -79,10 +82,19 @@ export default function UserMenu() {
               <p className="text-xs truncate mt-0.5" style={{ color: '#AAAAAA' }}>{user.email}</p>
             </div>
 
+            <Link
+              href="/register"
+              onClick={() => setMenuOpen(false)}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs transition-all hover:bg-gray-50"
+              style={{ color: '#555555' }}
+            >
+              {profile ? <Pencil className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
+              {profile ? 'プロフィール編集' : 'Vライバー登録'}
+            </Link>
             <button
               onClick={handleSignOut}
               className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs transition-all hover:bg-gray-50"
-              style={{ color: '#555555' }}
+              style={{ color: '#555555', borderTop: '1px solid #F0F0F0' }}
             >
               <LogOut className="w-3.5 h-3.5" />
               ログアウト

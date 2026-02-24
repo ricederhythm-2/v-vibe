@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useMyProfile } from '@/hooks/useMyProfile';
 
 const BRAND = '#EF5285';
 
@@ -70,6 +71,9 @@ function Field({ label, required = false, counter, children }: {
 
 export default function RegisterForm() {
   const router = useRouter();
+  const { profile, loading: profileLoading } = useMyProfile();
+  const isEditMode = !!profile;
+
   const [step, setStep]   = useState(0);
   const [form, setForm]   = useState<FormState>(INIT);
   const [rights, setRights] = useState<Record<RightId, boolean>>({ own_rights: false, no_third_party: false, terms: false });
@@ -79,6 +83,22 @@ export default function RegisterForm() {
   const [submitError, setSubmitError]     = useState('');
   const [done, setDone] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  // 編集モード: プロフィールが読み込まれたらフォームに反映
+  useEffect(() => {
+    if (!profile) return;
+    setForm({
+      name: profile.name,
+      handle: profile.handle,
+      description: profile.description,
+      imageFile: null,
+      imagePreview: profile.image_path
+        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/vlivers-images/${profile.image_path}`
+        : '',
+      color: profile.color,
+      tags: profile.tags,
+    });
+  }, [profile]);
 
   useEffect(() => () => { if (form.imagePreview) URL.revokeObjectURL(form.imagePreview); }, []);
 
@@ -101,12 +121,13 @@ export default function RegisterForm() {
   const canProceed = useCallback((): boolean => {
     switch (step) {
       case 0: return !!form.name.trim() && !!form.description.trim() && form.description.length <= 100;
-      case 1: return !!form.imageFile && !imageError;
+      // 編集時は既存画像があればOK
+      case 1: return (!!form.imageFile || (isEditMode && !!profile?.image_path)) && !imageError;
       case 2: return true;
       case 3: return RIGHTS_ITEMS.every((r) => rights[r.id]);
       default: return false;
     }
-  }, [step, form, imageError, rights]);
+  }, [step, form, imageError, rights, isEditMode, profile]);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -116,37 +137,49 @@ export default function RegisterForm() {
     if (!user) { router.push('/login?next=/register'); return; }
 
     try {
-      // 既にプロフィールがある場合は二重登録しない
-      const { data: existing } = await supabase
-        .from('vliver_profiles')
-        .select('id')
-        .eq('owner_id', user.id)
-        .limit(1);
-      if (existing && existing.length > 0) { setDone(true); return; }
-
-      let imagePath: string | null = null;
+      let imagePath = profile?.image_path ?? null;
       if (form.imageFile) {
         const ext = form.imageFile.name.split('.').pop() ?? 'jpg';
         imagePath = `${user.id}/${crypto.randomUUID()}.${ext}`;
         const { error } = await supabase.storage.from('vlivers-images').upload(imagePath, form.imageFile);
         if (error) throw error;
       }
-      const { error } = await supabase.from('vliver_profiles').insert({
-        owner_id: user.id, name: form.name, handle: form.handle,
-        description: form.description,
-        tags: form.tags, color: form.color, image_path: imagePath,
-      });
-      if (error) throw error;
+
+      if (isEditMode && profile) {
+        const { error } = await supabase.from('vliver_profiles').update({
+          name: form.name, handle: form.handle,
+          description: form.description,
+          tags: form.tags, color: form.color, image_path: imagePath,
+          updated_at: new Date().toISOString(),
+        }).eq('id', profile.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('vliver_profiles').insert({
+          owner_id: user.id, name: form.name, handle: form.handle,
+          description: form.description,
+          tags: form.tags, color: form.color, image_path: imagePath,
+        });
+        if (error) throw error;
+      }
       setDone(true);
     } catch (err) {
       console.error(err);
-      setSubmitError('登録に失敗しました。もう一度お試しください。');
+      setSubmitError(isEditMode ? '更新に失敗しました。もう一度お試しください。' : '登録に失敗しました。もう一度お試しください。');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // ── 登録完了画面 ──
+  // ── 読み込み中 ──
+  if (profileLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="w-6 h-6 rounded-full border-2 border-[#EF5285]/40 border-t-[#EF5285] animate-spin" />
+      </div>
+    );
+  }
+
+  // ── 完了画面 ──
   if (done) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 text-center px-6">
@@ -155,9 +188,13 @@ export default function RegisterForm() {
           <Check className="w-12 h-12 text-white" strokeWidth={3} />
         </div>
         <div>
-          <h2 className="text-2xl font-black" style={{ color: '#111111' }}>Vライバー登録完了！</h2>
+          <h2 className="text-2xl font-black" style={{ color: '#111111' }}>
+            {isEditMode ? 'プロフィールを更新しました！' : 'Vライバー登録完了！'}
+          </h2>
           <p className="text-sm mt-3 leading-relaxed" style={{ color: '#555555' }}>
-            プロフィールが作成されました。<br />さっそくボイスを投稿しましょう ✨
+            {isEditMode
+              ? 'プロフィールが更新されました ✨'
+              : 'プロフィールが作成されました。\nさっそくボイスを投稿しましょう ✨'}
           </p>
         </div>
         <div className="flex flex-col gap-3 w-full max-w-[220px]">
@@ -195,7 +232,7 @@ export default function RegisterForm() {
       {/* STEP 0 */}
       {step === 0 && (
         <div className="space-y-5">
-          <h2 className="text-[#111111] text-lg font-black">あなたのプロフィール</h2>
+          <h2 className="text-[#111111] text-lg font-black">{isEditMode ? 'プロフィールを編集' : 'あなたのプロフィール'}</h2>
           <Field label="名前" required>
             <input type="text" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
               placeholder="星咲 あかり" maxLength={30} className={inputCls} />
@@ -377,7 +414,7 @@ export default function RegisterForm() {
             style={canProceed() && !isSubmitting
               ? { background: BRAND, boxShadow: '0 4px 24px #EF528540' }
               : { background: '#E8E8E8', color: '#AAAAAA' }}>
-            {isSubmitting ? '登録中…' : canProceed() ? 'Vライバーとして登録する ✨' : '上の項目をすべて確認してください'}
+            {isSubmitting ? (isEditMode ? '更新中…' : '登録中…') : canProceed() ? (isEditMode ? 'プロフィールを更新する ✨' : 'Vライバーとして登録する ✨') : '上の項目をすべて確認してください'}
           </button>
         </div>
       )}

@@ -8,6 +8,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { usePreferences, scoreVLiver } from '@/hooks/usePreferences';
 import { useVlivers } from '@/hooks/useVlivers';
 import { useCFScores } from '@/hooks/useCFScores';
+import { useMyProfile } from '@/hooks/useMyProfile';
 import UserMenu from '@/components/UserMenu';
 
 const BRAND = '#EF5285';
@@ -18,6 +19,7 @@ export default function HomePage() {
   const { weights, recordLike, recordPass, hasHistory } = usePreferences();
   const { vlivers, loading }      = useVlivers();
   const { cfScores, saveAction }  = useCFScores();
+  const { profile: myProfile }    = useMyProfile();
 
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const cardRef         = useRef<SwipeCardHandle>(null);
@@ -118,14 +120,16 @@ export default function HomePage() {
               <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ background: BRAND }} />
             )}
           </Link>
-          <Link
-            href="/register"
-            className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-            aria-label="Vライバー登録"
-          >
-            <UserPlus className="w-3.5 h-3.5" style={{ color: '#555555' }} />
-          </Link>
+          {!myProfile && (
+            <Link
+              href="/register"
+              className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
+              style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
+              aria-label="Vライバー登録"
+            >
+              <UserPlus className="w-3.5 h-3.5" style={{ color: '#555555' }} />
+            </Link>
+          )}
           <Link
             href="/post"
             className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
