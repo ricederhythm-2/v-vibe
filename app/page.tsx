@@ -120,11 +120,12 @@ export default function HomePage() {
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <Link
             href="/favorites"
             className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
             style={{ background: 'rgba(196,181,253,0.08)', border: '1px solid rgba(196,181,253,0.18)' }}
+            aria-label="お気に入り"
           >
             <Heart className="w-3.5 h-3.5 text-fuchsia-300 fill-fuchsia-300" />
             <span className="text-violet-200 text-xs font-bold">{likedCount}</span>
@@ -134,19 +135,19 @@ export default function HomePage() {
           </Link>
           <Link
             href="/register"
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
+            className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
             style={{ background: 'rgba(196,181,253,0.08)', border: '1px solid rgba(196,181,253,0.18)' }}
+            aria-label="Vライバー登録"
           >
             <UserPlus className="w-3.5 h-3.5 text-violet-300" />
-            <span className="text-violet-200 text-xs font-bold">登録</span>
           </Link>
           <Link
             href="/post"
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
+            className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
             style={{ background: 'rgba(196,181,253,0.08)', border: '1px solid rgba(196,181,253,0.18)' }}
+            aria-label="ボイス投稿"
           >
             <Mic className="w-3.5 h-3.5 text-fuchsia-300" />
-            <span className="text-violet-200 text-xs font-bold">投稿</span>
           </Link>
           <UserMenu />
         </div>
