@@ -16,10 +16,9 @@ import {
 } from 'framer-motion';
 import { Play, Pause, Zap } from 'lucide-react';
 
-// ─────────────────────────────────────────────────────────────
-// 型定義
-// is_boosted: 将来の Stripe「優先表示ブースト」課金機能用
-// ─────────────────────────────────────────────────────────────
+const BRAND  = '#EF5285';
+const BOOST  = '#FEEE7D';
+
 export interface VLiver {
   id: string;
   name: string;
@@ -103,10 +102,6 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
 
     return (
       <>
-        {/*
-          preload="none": ページロード時の不要な通信を防止
-          ボイスは15秒以内想定。カード切替時に強制停止。
-        */}
         <audio
           ref={audioRef}
           src={vliver.voiceUrl || undefined}
@@ -122,118 +117,111 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
           dragElastic={0.65}
           onDragEnd={handleDragEnd}
         >
-          {/* ── カード本体 ── */}
           <div
             className="relative w-full h-full rounded-3xl overflow-hidden"
             style={{
-              /*
-                温かいパープル基調のカード背景。
-                各Vライバーのテーマカラーが上部に滲み出る。
-              */
-              background: `linear-gradient(165deg, ${vliver.color}32 0%, #1e1140 50%, #16093a 100%)`,
-              boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(196,181,253,0.10)`,
+              background: '#FFFFFF',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+              border: '1px solid #E8E8E8',
             }}
           >
-            {/* 立ち絵 */}
-            <img
-              src={vliver.imageUrl}
-              alt={vliver.name}
-              className="absolute inset-0 w-full h-full object-cover"
-              draggable={false}
-            />
-
-            {/* 上部フェード（バッジ可読性） */}
+            {/* 立ち絵エリア（上60%） */}
             <div
-              className="absolute top-0 inset-x-0 h-32"
-              style={{ background: 'linear-gradient(to bottom, rgba(19,9,43,0.7) 0%, transparent 100%)' }}
-            />
+              className="absolute inset-x-0 top-0"
+              style={{ height: '62%', background: '#FFF5F8' }}
+            >
+              <img
+                src={vliver.imageUrl}
+                alt={vliver.name}
+                className="w-full h-full object-cover"
+                draggable={false}
+              />
+            </div>
 
-            {/* 下部フェード（テキスト可読性） */}
-            <div
-              className="absolute bottom-0 inset-x-0 h-60"
-              style={{ background: 'linear-gradient(to top, rgba(22,9,58,0.97) 0%, rgba(22,9,58,0.7) 50%, transparent 100%)' }}
-            />
-
-            {/* ── BOOSTバッジ ── */}
+            {/* BOOST バッジ */}
             {vliver.is_boosted && (
               <div
                 className="absolute top-4 right-4 flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-full"
                 style={{
-                  background: 'linear-gradient(135deg, #fde68a, #f59e0b)',
-                  color: '#78350f',
-                  boxShadow: '0 2px 8px rgba(245,158,11,0.4)',
+                  background: BOOST,
+                  color: '#7A5F00',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
                 }}
               >
-                <Zap className="w-3 h-3 fill-amber-800" />
+                <Zap className="w-3 h-3" style={{ fill: '#7A5F00', color: '#7A5F00' }} />
                 BOOST
               </div>
             )}
 
-
-            {/* ── LIKE スタンプ（右スワイプ中） ── */}
+            {/* LIKE スタンプ */}
             <motion.div
               className="absolute top-12 right-5 rounded-xl px-3 py-1 -rotate-[18deg]"
-              style={{
-                opacity: likeOpacity,
-                border: '3px solid #86efac',
-              }}
+              style={{ opacity: likeOpacity, border: `3px solid ${BRAND}` }}
             >
-              <span className="font-black text-2xl tracking-widest" style={{ color: '#86efac' }}>
+              <span className="font-black text-2xl tracking-widest" style={{ color: BRAND }}>
                 LIKE!
               </span>
             </motion.div>
 
-            {/* ── PASS スタンプ（左スワイプ中） ── */}
+            {/* PASS スタンプ */}
             <motion.div
               className="absolute top-12 left-5 rounded-xl px-3 py-1 rotate-[18deg]"
-              style={{
-                opacity: passOpacity,
-                border: '3px solid #fda4af',
-              }}
+              style={{ opacity: passOpacity, border: '3px solid #AAAAAA' }}
             >
-              <span className="font-black text-2xl tracking-widest" style={{ color: '#fda4af' }}>
+              <span className="font-black text-2xl tracking-widest" style={{ color: '#AAAAAA' }}>
                 PASS
               </span>
             </motion.div>
 
-            {/* ── ボイス再生ボタン（中央）: voiceUrl がある場合のみ表示 ── */}
-            {vliver.voiceUrl && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              {/* 再生中: やわらかく光るリング */}
-              {isPlaying && (
-                <motion.div
-                  className="absolute rounded-full pointer-events-none"
-                  style={{ inset: '-14px', background: vliver.color, opacity: 0.25 }}
-                  animate={{ scale: [1, 1.35, 1], opacity: [0.25, 0, 0.25] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                />
-              )}
-              <button
-                onClick={toggleAudio}
-                className="relative w-16 h-16 rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
-                style={{
-                  background: `${vliver.color}cc`,
-                  backdropFilter: 'blur(12px)',
-                  boxShadow: `0 0 24px ${vliver.color}66, 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)`,
-                }}
-                aria-label={isPlaying ? 'ボイスを停止' : 'ボイスを再生'}
+            {/* 再生ボタン（立ち絵中央） */}
+            {vliver.voiceUrl && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2"
+                style={{ top: 'calc(62% - 32px)' }}
               >
-                {isPlaying ? (
-                  <Pause className="w-7 h-7 text-white fill-white" />
-                ) : (
-                  <Play className="w-7 h-7 text-white fill-white translate-x-0.5" />
+                {isPlaying && (
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none"
+                    style={{ inset: '-14px', background: BRAND, opacity: 0.15 }}
+                    animate={{ scale: [1, 1.4, 1], opacity: [0.15, 0, 0.15] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  />
                 )}
-              </button>
-            </div>}
+                <button
+                  onClick={toggleAudio}
+                  className="relative w-16 h-16 rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95"
+                  style={{
+                    background: BRAND,
+                    boxShadow: `0 4px 16px ${BRAND}50`,
+                    border: '3px solid #fff',
+                  }}
+                  aria-label={isPlaying ? 'ボイスを停止' : 'ボイスを再生'}
+                >
+                  {isPlaying ? (
+                    <Pause className="w-6 h-6 text-white fill-white" />
+                  ) : (
+                    <Play className="w-6 h-6 text-white fill-white translate-x-0.5" />
+                  )}
+                </button>
+              </div>
+            )}
 
-            {/* ── 下部情報エリア ── */}
-            <div className="absolute bottom-0 inset-x-0 p-5 pointer-events-none">
-              <h2 className="font-black text-2xl tracking-tight leading-tight" style={{ color: '#faf5ff' }}>
+            {/* 下部情報エリア */}
+            <div
+              className="absolute bottom-0 inset-x-0 px-5 pt-4 pb-5"
+              style={{
+                top: '62%',
+                background: '#FFFFFF',
+                borderTop: '1px solid #F0F0F0',
+              }}
+            >
+              <h2 className="font-black text-[22px] tracking-tight leading-tight" style={{ color: '#111111' }}>
                 {vliver.name}
               </h2>
-              <p className="text-xs font-mono mt-0.5 truncate" style={{ color: 'rgba(250,245,255,0.38)' }}>
+              <p className="text-xs font-mono mt-0.5" style={{ color: '#AAAAAA' }}>
                 {vliver.handle}
               </p>
-              <p className="text-sm mt-2 font-medium leading-relaxed" style={{ color: 'rgba(250,245,255,0.85)' }}>
+              <p className="text-sm mt-2 leading-relaxed line-clamp-1" style={{ color: '#555555' }}>
                 「{vliver.catchphrase}」
               </p>
 
@@ -244,11 +232,9 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
                     key={tag}
                     className="text-xs px-2.5 py-0.5 rounded-full font-semibold"
                     style={{
-                      background: `${vliver.color}22`,
-                      color: vliver.color,
-                      border: `1px solid ${vliver.color}50`,
-                      /* タグにほんのりインナーシャドウで立体感 */
-                      boxShadow: `inset 0 1px 0 ${vliver.color}30`,
+                      background: `${BRAND}12`,
+                      color: BRAND,
+                      border: `1px solid ${BRAND}25`,
                     }}
                   >
                     #{tag}

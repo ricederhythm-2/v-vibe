@@ -7,6 +7,8 @@ import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle, Mic, User } f
 import { createClient } from '@/lib/supabase/client';
 import { useMyProfile } from '@/hooks/useMyProfile';
 
+const BRAND = '#EF5285';
+
 const STEPS = ['投稿内容', 'ボイスアップロード'] as const;
 
 const RIGHTS_ITEMS = [
@@ -18,8 +20,8 @@ type RightId = typeof RIGHTS_ITEMS[number]['id'];
 
 const MAX_VOICE_MB = 20;
 
-const inputCls = 'w-full bg-[rgba(196,181,253,0.06)] border border-[rgba(196,181,253,0.14)] rounded-xl px-4 py-3 text-white placeholder-white/20 text-sm focus:outline-none focus:border-[rgba(196,181,253,0.35)] transition-colors';
-const labelCls = 'block text-[rgba(196,181,253,0.55)] text-xs font-semibold uppercase tracking-wider';
+const inputCls = 'w-full bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 text-[#111111] placeholder-[#AAAAAA] text-sm focus:outline-none focus:border-[#EF5285] transition-colors';
+const labelCls = 'block text-[#555555] text-xs font-semibold uppercase tracking-wider';
 
 function Field({ label, required = false, counter, children }: {
   label: string; required?: boolean; counter?: { current: number; max: number }; children: React.ReactNode;
@@ -29,7 +31,7 @@ function Field({ label, required = false, counter, children }: {
       <div className="flex items-center justify-between mb-1.5">
         <label className={labelCls}>{label}{required && <span className="text-rose-400 ml-1">*</span>}</label>
         {counter && (
-          <span className={`text-xs ${counter.current > counter.max ? 'text-rose-400' : 'text-white/30'}`}>
+          <span className={`text-xs ${counter.current > counter.max ? 'text-rose-400' : 'text-[#AAAAAA]'}`}>
             {counter.current}/{counter.max}
           </span>
         )}
@@ -106,7 +108,7 @@ export default function VoicePostForm() {
   if (profileLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="w-6 h-6 rounded-full border-2 border-fuchsia-400/40 border-t-fuchsia-400 animate-spin" />
+        <div className="w-6 h-6 rounded-full border-2 border-[#EF5285]/40 border-t-[#EF5285] animate-spin" />
       </div>
     );
   }
@@ -116,18 +118,18 @@ export default function VoicePostForm() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 text-center px-6">
         <div className="w-20 h-20 rounded-full flex items-center justify-center"
-          style={{ background: 'rgba(196,181,253,0.08)', border: '2px solid rgba(196,181,253,0.2)' }}>
-          <User className="w-9 h-9" style={{ color: 'rgba(196,181,253,0.5)' }} />
+          style={{ background: '#F9F9F9', border: '2px solid #E8E8E8' }}>
+          <User className="w-9 h-9" style={{ color: '#AAAAAA' }} />
         </div>
         <div>
-          <h2 className="text-xl font-black text-white">まずVライバー登録を</h2>
-          <p className="text-sm mt-2 leading-relaxed" style={{ color: 'rgba(196,181,253,0.5)' }}>
+          <h2 className="text-xl font-black text-[#111111]">まずVライバー登録を</h2>
+          <p className="text-sm mt-2 leading-relaxed" style={{ color: '#555555' }}>
             ボイスを投稿するには、<br />先にVライバープロフィールの登録が必要です。
           </p>
         </div>
         <Link href="/register"
           className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm text-white hover:scale-105 transition-transform"
-          style={{ background: 'linear-gradient(135deg, #7C3AED, #EC4899)' }}>
+          style={{ background: BRAND, boxShadow: '0 4px 16px #EF528540' }}>
           Vライバー登録へ
         </Link>
       </div>
@@ -139,12 +141,12 @@ export default function VoicePostForm() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 text-center px-6">
         <div className="w-24 h-24 rounded-full flex items-center justify-center shadow-2xl"
-          style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', boxShadow: '0 8px 40px rgba(168,85,247,0.4)' }}>
+          style={{ background: '#EF5285', boxShadow: '0 8px 40px #EF528540' }}>
           <Check className="w-12 h-12 text-white" strokeWidth={3} />
         </div>
         <div>
-          <h2 className="text-2xl font-black" style={{ color: '#faf5ff' }}>ボイス投稿完了！</h2>
-          <p className="text-sm mt-3 leading-relaxed" style={{ color: 'rgba(196,181,253,0.55)' }}>
+          <h2 className="text-2xl font-black" style={{ color: '#111111' }}>ボイス投稿完了！</h2>
+          <p className="text-sm mt-3 leading-relaxed" style={{ color: '#555555' }}>
             スワイプ画面に反映されました ✨<br />続けてもう1枚投稿もできます。
           </p>
         </div>
@@ -152,12 +154,12 @@ export default function VoicePostForm() {
           <button
             onClick={() => { setStep(0); setCatchCopy(''); setVoiceFile(null); setRights({ own_voice: false, no_bgm: false, terms: false }); setDone(false); }}
             className="flex items-center justify-center gap-2 py-3 rounded-full font-bold text-sm text-white hover:scale-105 transition-transform"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #EC4899)' }}>
+            style={{ background: BRAND, boxShadow: '0 4px 16px #EF528540' }}>
             もう1枚投稿する
           </button>
           <Link href="/"
             className="py-3 rounded-full font-bold text-sm text-center transition-all hover:scale-105"
-            style={{ color: 'rgba(196,181,253,0.6)', border: '1px solid rgba(196,181,253,0.2)', background: 'rgba(196,181,253,0.06)' }}>
+            style={{ color: '#555555', border: '1px solid #E8E8E8', background: '#F9F9F9' }}>
             スワイプ画面を見る
           </Link>
         </div>
@@ -172,9 +174,9 @@ export default function VoicePostForm() {
         {STEPS.map((label, i) => (
           <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
             <div className="w-full h-1 rounded-full transition-all duration-300"
-              style={{ background: i <= step ? profile.color : '#1d1040' }} />
+              style={{ background: i <= step ? BRAND : '#E8E8E8' }} />
             <span className="text-[9px] font-bold text-center leading-tight transition-colors duration-300"
-              style={{ color: i === step ? profile.color : 'rgba(196,181,253,0.25)' }}>
+              style={{ color: i === step ? BRAND : '#AAAAAA' }}>
               {label}
             </span>
           </div>
@@ -183,20 +185,20 @@ export default function VoicePostForm() {
 
       {/* プロフィールカード */}
       <div className="flex items-center gap-3 mb-6 rounded-2xl px-3 py-2.5"
-        style={{ background: 'rgba(196,181,253,0.05)', border: '1px solid rgba(196,181,253,0.12)' }}>
-        <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-[rgba(196,181,253,0.1)]">
+        style={{ background: '#F9F9F9', border: '1px solid #E8E8E8' }}>
+        <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-[#F0F0F0]">
           {profile.image_path && (
             <img src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/vlivers-images/${profile.image_path}`}
               alt={profile.name} className="w-full h-full object-cover" />
           )}
         </div>
         <div className="min-w-0">
-          <p className="text-white text-sm font-bold truncate">{profile.name}</p>
-          {profile.handle && <p className="text-[rgba(196,181,253,0.45)] text-xs">@{profile.handle}</p>}
+          <p className="text-[#111111] text-sm font-bold truncate">{profile.name}</p>
+          {profile.handle && <p className="text-[#AAAAAA] text-xs">@{profile.handle}</p>}
         </div>
         <div className="ml-auto flex-shrink-0">
           <span className="text-[10px] font-semibold px-2 py-1 rounded-full"
-            style={{ background: `${profile.color}20`, color: profile.color, border: `1px solid ${profile.color}40` }}>
+            style={{ background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }}>
             Vライバー
           </span>
         </div>
@@ -205,7 +207,7 @@ export default function VoicePostForm() {
       {/* STEP 0 */}
       {step === 0 && (
         <div className="space-y-5">
-          <h2 className="text-white text-lg font-black">投稿内容</h2>
+          <h2 className="text-[#111111] text-lg font-black">投稿内容</h2>
           <Field label="キャッチコピー" required counter={{ current: catchCopy.length, max: 60 }}>
             <textarea
               value={catchCopy}
@@ -214,7 +216,7 @@ export default function VoicePostForm() {
               rows={3}
               className={`${inputCls} resize-none ${catchCopy.length > 60 ? 'border-rose-500/60' : ''}`}
             />
-            <p className="mt-1 text-[rgba(196,181,253,0.35)] text-[11px]">
+            <p className="mt-1 text-[#AAAAAA] text-[11px]">
               スワイプ画面でカードに表示されるひと言です
             </p>
           </Field>
@@ -224,19 +226,19 @@ export default function VoicePostForm() {
       {/* STEP 1 */}
       {step === 1 && (
         <div className="space-y-5">
-          <h2 className="text-white text-lg font-black">ボイスをアップロード</h2>
+          <h2 className="text-[#111111] text-lg font-black">ボイスをアップロード</h2>
 
           {/* ドロップゾーン */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className={labelCls}>ボイスファイル <span className="text-rose-400">*</span></label>
-              <span className="text-white/25 text-xs">MP3/M4A/WAV・{MAX_VOICE_MB}MB以内</span>
+              <span className="text-[#AAAAAA] text-xs">MP3/M4A/WAV・{MAX_VOICE_MB}MB以内</span>
             </div>
             <div
               className={`relative rounded-2xl border-2 border-dashed transition-colors flex flex-col items-center justify-center gap-3 py-8 ${
-                voiceDragOver ? 'border-white/40 bg-white/10'
+                voiceDragOver ? 'border-[#EF5285]/40 bg-[#EF5285]/05'
                 : voiceFile ? 'border-emerald-500/40 bg-emerald-500/10'
-                : 'border-[rgba(196,181,253,0.15)] hover:border-[rgba(196,181,253,0.28)]'
+                : 'border-[#E8E8E8] hover:border-[#EF5285]/40'
               }`}
               onDragOver={(e) => { e.preventDefault(); setVoiceDragOver(true); }}
               onDragLeave={() => setVoiceDragOver(false)}
@@ -246,22 +248,22 @@ export default function VoicePostForm() {
                 <>
                   <Mic className="w-8 h-8 text-emerald-400" />
                   <div className="text-center">
-                    <p className="text-emerald-300 text-sm font-semibold">{voiceFile.name}</p>
-                    <p className="text-white/35 text-xs mt-0.5">{(voiceFile.size / (1024 * 1024)).toFixed(1)} MB</p>
+                    <p className="text-emerald-600 text-sm font-semibold">{voiceFile.name}</p>
+                    <p className="text-[#AAAAAA] text-xs mt-0.5">{(voiceFile.size / (1024 * 1024)).toFixed(1)} MB</p>
                   </div>
                   <button
                     onClick={() => setVoiceFile(null)}
-                    className="flex items-center gap-1 text-white/40 text-xs hover:text-white/70 transition-colors">
+                    className="flex items-center gap-1 text-[#AAAAAA] text-xs hover:text-[#555555] transition-colors">
                     <X className="w-3.5 h-3.5" />変更する
                   </button>
                 </>
               ) : (
                 <>
-                  <Upload className="w-8 h-8 text-white/25" />
-                  <p className="text-white/40 text-sm">タップまたはドロップ</p>
+                  <Upload className="w-8 h-8 text-[#AAAAAA]" />
+                  <p className="text-[#AAAAAA] text-sm">タップまたはドロップ</p>
                   <button
                     onClick={() => voiceInputRef.current?.click()}
-                    className="px-4 py-2 rounded-xl border border-[rgba(196,181,253,0.18)] text-[rgba(196,181,253,0.55)] text-sm font-medium hover:bg-[rgba(196,181,253,0.06)] transition-colors">
+                    className="px-4 py-2 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
                     ファイルを選択
                   </button>
                 </>
@@ -279,17 +281,17 @@ export default function VoicePostForm() {
           {/* 権利確認チェック */}
           <div className="space-y-3">
             <div className="flex items-start gap-2 rounded-xl px-3 py-2.5"
-              style={{ background: 'rgba(196,181,253,0.05)', border: '1px solid rgba(196,181,253,0.12)' }}>
+              style={{ background: '#FFF9F9', border: '1px solid #E8E8E8' }}>
               <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
               <p className="text-amber-400/80 text-xs leading-relaxed">投稿前に以下を必ずご確認ください</p>
             </div>
             {RIGHTS_ITEMS.map((item) => (
               <button key={item.id} onClick={() => setRights((p) => ({ ...p, [item.id]: !p[item.id] }))}
-                className={`w-full flex items-start gap-3 rounded-2xl p-3.5 border text-left transition-all ${rights[item.id] ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-[rgba(196,181,253,0.12)] bg-[rgba(196,181,253,0.02)] hover:border-[rgba(196,181,253,0.2)]'}`}>
-                <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${rights[item.id] ? 'bg-emerald-500' : 'bg-white/10'}`}>
+                className={`w-full flex items-start gap-3 rounded-2xl p-3.5 border text-left transition-all ${rights[item.id] ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-[#E8E8E8] bg-[#F9F9F9] hover:border-[#EF5285]/30'}`}>
+                <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${rights[item.id] ? 'bg-emerald-500' : 'bg-[#E8E8E8]'}`}>
                   {rights[item.id] && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
                 </div>
-                <span className={`text-xs leading-relaxed ${rights[item.id] ? 'text-white/85' : 'text-white/45'}`}>{item.text}</span>
+                <span className={`text-xs leading-relaxed ${rights[item.id] ? 'text-[#111111]' : 'text-[#555555]'}`}>{item.text}</span>
               </button>
             ))}
           </div>
@@ -304,8 +306,8 @@ export default function VoicePostForm() {
           <button onClick={handleSubmit} disabled={!canProceed() || isSubmitting}
             className="w-full py-4 rounded-2xl font-black text-base text-white transition-all"
             style={canProceed() && !isSubmitting
-              ? { background: 'linear-gradient(135deg, #7C3AED, #EC4899)', boxShadow: '0 4px 24px rgba(124,58,237,0.4)' }
-              : { background: '#1d1040', color: 'rgba(196,181,253,0.25)' }}>
+              ? { background: BRAND, boxShadow: '0 4px 24px #EF528540' }
+              : { background: '#E8E8E8', color: '#AAAAAA' }}>
             {isSubmitting ? 'アップロード中…' : canProceed() ? 'ボイスを投稿する ✨' : 'ファイルと確認事項をチェックしてください'}
           </button>
         </div>
@@ -316,15 +318,15 @@ export default function VoicePostForm() {
         <div className="mt-8 flex items-center gap-3">
           {step > 0 && (
             <button onClick={() => setStep((s) => s - 1)}
-              className="flex items-center gap-1.5 px-4 py-3 rounded-xl border border-[rgba(196,181,253,0.18)] text-[rgba(196,181,253,0.55)] text-sm font-medium hover:bg-[rgba(196,181,253,0.06)] transition-colors">
+              className="flex items-center gap-1.5 px-4 py-3 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
               <ChevronLeft className="w-4 h-4" />戻る
             </button>
           )}
           <button onClick={() => setStep((s) => s + 1)} disabled={!canProceed()}
             className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl font-bold text-sm text-white transition-all"
             style={canProceed()
-              ? { background: profile.color, boxShadow: `0 4px 16px ${profile.color}55` }
-              : { background: '#1d1040', color: 'rgba(196,181,253,0.25)' }}>
+              ? { background: BRAND, boxShadow: '0 4px 16px #EF528540' }
+              : { background: '#E8E8E8', color: '#AAAAAA' }}>
             次へ<ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -332,7 +334,7 @@ export default function VoicePostForm() {
 
       {step > 0 && step < STEPS.length - 1 && (
         <button onClick={() => setStep((s) => s - 1)}
-          className="mt-3 w-full flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-[rgba(196,181,253,0.18)] text-[rgba(196,181,253,0.55)] text-sm font-medium hover:bg-[rgba(196,181,253,0.06)] transition-colors">
+          className="mt-3 w-full flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
           <ChevronLeft className="w-4 h-4" />戻る
         </button>
       )}

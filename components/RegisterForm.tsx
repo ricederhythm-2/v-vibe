@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
+const BRAND = '#EF5285';
+
 const STEPS = ['基本情報', '立ち絵アップロード', 'スタイル設定', '確認 & 登録'] as const;
 
 const PRESET_COLORS = [
@@ -45,8 +47,8 @@ const INIT: FormState = {
 };
 
 // ── インライン スタイル定数 ──
-const inputCls = 'w-full bg-[rgba(196,181,253,0.06)] border border-[rgba(196,181,253,0.14)] rounded-xl px-4 py-3 text-white placeholder-white/20 text-sm focus:outline-none focus:border-[rgba(196,181,253,0.35)] transition-colors';
-const labelCls = 'block text-[rgba(196,181,253,0.55)] text-xs font-semibold uppercase tracking-wider';
+const inputCls = 'w-full bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 text-[#111111] placeholder-[#AAAAAA] text-sm focus:outline-none focus:border-[#EF5285] transition-colors';
+const labelCls = 'block text-[#555555] text-xs font-semibold uppercase tracking-wider';
 
 function Field({ label, required = false, counter, children }: {
   label: string; required?: boolean; counter?: { current: number; max: number }; children: React.ReactNode;
@@ -56,7 +58,7 @@ function Field({ label, required = false, counter, children }: {
       <div className="flex items-center justify-between mb-1.5">
         <label className={labelCls}>{label}{required && <span className="text-rose-400 ml-1">*</span>}</label>
         {counter && (
-          <span className={`text-xs ${counter.current > counter.max ? 'text-rose-400' : 'text-white/30'}`}>
+          <span className={`text-xs ${counter.current > counter.max ? 'text-rose-400' : 'text-[#AAAAAA]'}`}>
             {counter.current}/{counter.max}
           </span>
         )}
@@ -141,24 +143,24 @@ export default function RegisterForm() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 text-center px-6">
         <div className="w-24 h-24 rounded-full flex items-center justify-center shadow-2xl"
-          style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', boxShadow: '0 8px 40px rgba(168,85,247,0.4)' }}>
+          style={{ background: '#EF5285', boxShadow: '0 8px 40px #EF528540' }}>
           <Check className="w-12 h-12 text-white" strokeWidth={3} />
         </div>
         <div>
-          <h2 className="text-2xl font-black" style={{ color: '#faf5ff' }}>Vライバー登録完了！</h2>
-          <p className="text-sm mt-3 leading-relaxed" style={{ color: 'rgba(196,181,253,0.55)' }}>
+          <h2 className="text-2xl font-black" style={{ color: '#111111' }}>Vライバー登録完了！</h2>
+          <p className="text-sm mt-3 leading-relaxed" style={{ color: '#555555' }}>
             プロフィールが作成されました。<br />さっそくボイスを投稿しましょう ✨
           </p>
         </div>
         <div className="flex flex-col gap-3 w-full max-w-[220px]">
           <Link href="/post"
             className="flex items-center justify-center gap-2 py-3 rounded-full font-bold text-sm text-white hover:scale-105 transition-transform"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #EC4899)' }}>
+            style={{ background: '#EF5285', boxShadow: '0 4px 16px #EF528540' }}>
             ボイスを投稿する
           </Link>
           <Link href="/"
             className="py-3 rounded-full font-bold text-sm text-center transition-all hover:scale-105"
-            style={{ color: 'rgba(196,181,253,0.6)', border: '1px solid rgba(196,181,253,0.2)', background: 'rgba(196,181,253,0.06)' }}>
+            style={{ color: '#555555', border: '1px solid #E8E8E8', background: '#F9F9F9' }}>
             スワイプ画面を見る
           </Link>
         </div>
@@ -173,9 +175,9 @@ export default function RegisterForm() {
         {STEPS.map((label, i) => (
           <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
             <div className="w-full h-1 rounded-full transition-all duration-300"
-              style={{ background: i <= step ? form.color : '#1d1040' }} />
+              style={{ background: i <= step ? BRAND : '#E8E8E8' }} />
             <span className="text-[9px] font-bold text-center leading-tight transition-colors duration-300"
-              style={{ color: i === step ? form.color : 'rgba(196,181,253,0.25)' }}>
+              style={{ color: i === step ? BRAND : '#AAAAAA' }}>
               {label}
             </span>
           </div>
@@ -185,18 +187,18 @@ export default function RegisterForm() {
       {/* STEP 0 */}
       {step === 0 && (
         <div className="space-y-5">
-          <h2 className="text-white text-lg font-black">あなたのプロフィール</h2>
+          <h2 className="text-[#111111] text-lg font-black">あなたのプロフィール</h2>
           <Field label="名前" required>
             <input type="text" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
               placeholder="星咲 あかり" maxLength={30} className={inputCls} />
           </Field>
           <Field label="ハンドル名">
             <div className={`${inputCls} flex items-center`}>
-              <span className="text-white/30 text-sm mr-1">@</span>
+              <span className="text-[#AAAAAA] text-sm mr-1">@</span>
               <input type="text" value={form.handle}
                 onChange={(e) => setForm((p) => ({ ...p, handle: e.target.value.replace(/[^a-zA-Z0-9_]/g, '') }))}
                 placeholder="akari_hoshizaki" maxLength={20}
-                className="flex-1 bg-transparent text-white placeholder-white/20 text-sm focus:outline-none" />
+                className="flex-1 bg-transparent text-[#111111] placeholder-[#AAAAAA] text-sm focus:outline-none" />
             </div>
           </Field>
           <Field label="自己紹介" required counter={{ current: form.description.length, max: 100 }}>
@@ -210,17 +212,17 @@ export default function RegisterForm() {
       {/* STEP 1 */}
       {step === 1 && (
         <div className="space-y-5">
-          <h2 className="text-white text-lg font-black">立ち絵をアップロード</h2>
+          <h2 className="text-[#111111] text-lg font-black">立ち絵をアップロード</h2>
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className={labelCls}>立ち絵画像 <span className="text-rose-400">*</span></label>
-              <span className="text-white/25 text-xs">JPG/PNG/WEBP・{MAX_IMAGE_MB}MB以内</span>
+              <span className="text-[#AAAAAA] text-xs">JPG/PNG/WEBP・{MAX_IMAGE_MB}MB以内</span>
             </div>
             <div
               className={`relative rounded-2xl border-2 border-dashed overflow-hidden transition-colors ${
-                imageDragOver ? 'border-white/40 bg-white/10'
-                : form.imagePreview ? 'border-white/10'
-                : 'border-[rgba(196,181,253,0.15)] hover:border-[rgba(196,181,253,0.28)]'
+                imageDragOver ? 'border-[#EF5285]/40 bg-[#EF5285]/05'
+                : form.imagePreview ? 'border-[#E8E8E8]'
+                : 'border-[#E8E8E8] hover:border-[#EF5285]/40'
               }`}
               style={{ height: form.imagePreview ? '280px' : '160px' }}
               onDragOver={(e) => { e.preventDefault(); setImageDragOver(true); }}
@@ -238,8 +240,8 @@ export default function RegisterForm() {
               ) : (
                 <button onClick={() => imageInputRef.current?.click()}
                   className="absolute inset-0 flex flex-col items-center justify-center gap-2 w-full">
-                  <Upload className="w-8 h-8 text-white/30" />
-                  <span className="text-white/40 text-sm">タップまたはドロップ</span>
+                  <Upload className="w-8 h-8 text-[#AAAAAA]" />
+                  <span className="text-[#AAAAAA] text-sm">タップまたはドロップ</span>
                 </button>
               )}
             </div>
@@ -247,7 +249,7 @@ export default function RegisterForm() {
               onChange={(e: ChangeEvent<HTMLInputElement>) => { const f = e.target.files?.[0]; if (f) handleImageFile(f); }} />
             {!form.imagePreview && (
               <button onClick={() => imageInputRef.current?.click()}
-                className="mt-2 w-full py-2.5 rounded-xl border border-[rgba(196,181,253,0.18)] text-[rgba(196,181,253,0.55)] text-sm font-medium hover:bg-[rgba(196,181,253,0.06)] transition-colors">
+                className="mt-2 w-full py-2.5 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
                 画像ファイルを選択
               </button>
             )}
@@ -263,7 +265,7 @@ export default function RegisterForm() {
       {/* STEP 2 */}
       {step === 2 && (
         <div className="space-y-7">
-          <h2 className="text-white text-lg font-black">カードのスタイル</h2>
+          <h2 className="text-[#111111] text-lg font-black">カードのスタイル</h2>
           <div>
             <div className="flex items-center justify-between mb-3">
               <label className={labelCls}>テーマカラー</label>
@@ -288,8 +290,8 @@ export default function RegisterForm() {
           </div>
           <div>
             <div className="flex items-center justify-between mb-3">
-              <label className={labelCls}>タグ <span className="text-white/30 font-normal normal-case">（最大3つ）</span></label>
-              <span className="text-xs text-white/30">{form.tags.length}/3</span>
+              <label className={labelCls}>タグ <span className="text-[#AAAAAA] font-normal normal-case">（最大3つ）</span></label>
+              <span className="text-xs text-[#AAAAAA]">{form.tags.length}/3</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {PRESET_TAGS.map((tag) => {
@@ -298,7 +300,9 @@ export default function RegisterForm() {
                 return (
                   <button key={tag} onClick={() => !disabled && toggleTag(tag)} disabled={disabled}
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${disabled ? 'opacity-25 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
-                    style={selected ? { background: form.color, color: '#fff' } : { background: `${form.color}16`, color: form.color, border: `1px solid ${form.color}40` }}>
+                    style={selected
+                      ? { background: BRAND, color: '#fff' }
+                      : { background: '#F9F9F9', color: '#555555', border: '1px solid #E8E8E8' }}>
                     {selected && '✓ '}#{tag}
                   </button>
                 );
@@ -308,13 +312,13 @@ export default function RegisterForm() {
           {/* プレビュー */}
           <div>
             <label className={labelCls}>プレビュー</label>
-            <div className="mt-3 relative rounded-2xl overflow-hidden border border-white/10 h-52"
-              style={{ background: `linear-gradient(165deg, ${form.color}18 0%, #0d0d20 100%)` }}>
+            <div className="mt-3 relative rounded-2xl overflow-hidden border border-[#E8E8E8] h-52"
+              style={{ background: `linear-gradient(165deg, ${form.color}18 0%, #F9F9F9 100%)` }}>
               {form.imagePreview ? (
                 <img src={form.imagePreview} alt="" className="absolute inset-0 w-full h-full object-cover" />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <p className="text-white/15 text-xs">立ち絵がここに表示されます</p>
+                  <p className="text-[#AAAAAA] text-xs">立ち絵がここに表示されます</p>
                 </div>
               )}
               <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-black/95 to-transparent" />
@@ -337,20 +341,20 @@ export default function RegisterForm() {
       {/* STEP 3 */}
       {step === 3 && (
         <div className="space-y-6">
-          <h2 className="text-white text-lg font-black">確認 & 登録</h2>
+          <h2 className="text-[#111111] text-lg font-black">確認 & 登録</h2>
           <div className="flex items-start gap-2 rounded-xl px-3 py-2.5"
-            style={{ background: 'rgba(196,181,253,0.05)', border: '1px solid rgba(196,181,253,0.12)' }}>
+            style={{ background: '#FFF9F9', border: '1px solid #E8E8E8' }}>
             <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <p className="text-amber-400/80 text-xs leading-relaxed">登録前に以下を必ずご確認ください</p>
           </div>
           <div className="space-y-3">
             {RIGHTS_ITEMS.map((item) => (
               <button key={item.id} onClick={() => setRights((p) => ({ ...p, [item.id]: !p[item.id] }))}
-                className={`w-full flex items-start gap-3 rounded-2xl p-3.5 border text-left transition-all ${rights[item.id] ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-[rgba(196,181,253,0.12)] bg-[rgba(196,181,253,0.02)] hover:border-[rgba(196,181,253,0.2)]'}`}>
-                <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${rights[item.id] ? 'bg-emerald-500' : 'bg-white/10'}`}>
+                className={`w-full flex items-start gap-3 rounded-2xl p-3.5 border text-left transition-all ${rights[item.id] ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-[#E8E8E8] bg-[#F9F9F9] hover:border-[#EF5285]/30'}`}>
+                <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${rights[item.id] ? 'bg-emerald-500' : 'bg-[#E8E8E8]'}`}>
                   {rights[item.id] && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
                 </div>
-                <span className={`text-xs leading-relaxed ${rights[item.id] ? 'text-white/85' : 'text-white/45'}`}>{item.text}</span>
+                <span className={`text-xs leading-relaxed ${rights[item.id] ? 'text-[#111111]' : 'text-[#555555]'}`}>{item.text}</span>
               </button>
             ))}
           </div>
@@ -363,8 +367,8 @@ export default function RegisterForm() {
           <button onClick={handleSubmit} disabled={!canProceed() || isSubmitting}
             className="w-full py-4 rounded-2xl font-black text-base text-white transition-all"
             style={canProceed() && !isSubmitting
-              ? { background: 'linear-gradient(135deg, #7C3AED, #EC4899)', boxShadow: '0 4px 24px rgba(124,58,237,0.4)' }
-              : { background: '#1d1040', color: 'rgba(196,181,253,0.25)' }}>
+              ? { background: BRAND, boxShadow: '0 4px 24px #EF528540' }
+              : { background: '#E8E8E8', color: '#AAAAAA' }}>
             {isSubmitting ? '登録中…' : canProceed() ? 'Vライバーとして登録する ✨' : '上の項目をすべて確認してください'}
           </button>
         </div>
@@ -374,14 +378,16 @@ export default function RegisterForm() {
       <div className="mt-8 flex items-center gap-3">
         {step > 0 && (
           <button onClick={() => setStep((s) => s - 1)}
-            className="flex items-center gap-1.5 px-4 py-3 rounded-xl border border-[rgba(196,181,253,0.18)] text-[rgba(196,181,253,0.55)] text-sm font-medium hover:bg-[rgba(196,181,253,0.06)] transition-colors">
+            className="flex items-center gap-1.5 px-4 py-3 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
             <ChevronLeft className="w-4 h-4" />戻る
           </button>
         )}
         {step < STEPS.length - 1 && (
           <button onClick={() => setStep((s) => s + 1)} disabled={!canProceed()}
             className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl font-bold text-sm text-white transition-all"
-            style={canProceed() ? { background: form.color, boxShadow: `0 4px 16px ${form.color}55` } : { background: '#1d1040', color: 'rgba(196,181,253,0.25)' }}>
+            style={canProceed()
+              ? { background: BRAND, boxShadow: '0 4px 16px #EF528540' }
+              : { background: '#E8E8E8', color: '#AAAAAA' }}>
             次へ<ChevronRight className="w-4 h-4" />
           </button>
         )}

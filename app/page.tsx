@@ -10,31 +10,21 @@ import { useVlivers } from '@/hooks/useVlivers';
 import { useCFScores } from '@/hooks/useCFScores';
 import UserMenu from '@/components/UserMenu';
 
+const BRAND = '#EF5285';
+
 export default function HomePage() {
-  // index の代わりに「見たID集合」で管理することで、
-  // レコメンドの順番が変わっても整合性が取れる
-  const [seenIds, setSeenIds]         = useState<Set<string>>(new Set());
-  const { likedIds, addFavorite }     = useFavorites();
+  const [seenIds, setSeenIds]     = useState<Set<string>>(new Set());
+  const { likedIds, addFavorite } = useFavorites();
   const { weights, recordLike, recordPass, hasHistory } = usePreferences();
-  const { vlivers, loading }          = useVlivers();
-  const { cfScores, saveAction }      = useCFScores();
+  const { vlivers, loading }      = useVlivers();
+  const { cfScores, saveAction }  = useCFScores();
 
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const cardRef         = useRef<SwipeCardHandle>(null);
 
-  // ─────────────────────────────────────────────────────────────
-  // レコメンドソート
-  //
-  // 嗜好データあり → タグスコア + is_boosted ボーナスで降順ソート
-  // コールドスタート → is_boosted 優先 → 元の登録順
-  //
-  // seenIds と weights のどちらかが変わるたびに再計算される。
-  // LIKE/PASS のたびに weights が更新され、次のカード順が即座に変化する。
-  // ─────────────────────────────────────────────────────────────
   const remaining = useMemo(() => {
     const unseen = vlivers.filter((v) => !seenIds.has(v.id));
 
-    // コールドスタート: 嗜好データなし & CF データなし → is_boosted 優先
     if (!hasHistory && cfScores.size === 0) {
       return [...unseen].sort((a, b) => Number(b.is_boosted) - Number(a.is_boosted));
     }
@@ -45,8 +35,6 @@ export default function HomePage() {
       const cfA      = cfScores.get(a.id) ?? 0;
       const cfB      = cfScores.get(b.id) ?? 0;
 
-      // CF データがある場合はハイブリッドスコア（CF 60% + コンテンツ 40%）
-      // CF データがない場合はコンテンツのみ（既存の動作）
       if (cfScores.size > 0) {
         return (contentB * 0.4 + cfB * 0.6) - (contentA * 0.4 + cfA * 0.6);
       }
@@ -59,7 +47,6 @@ export default function HomePage() {
   const isFinished = remaining.length === 0;
   const likedCount = likedIds.size;
 
-  // ── 音声管理 ──
   const stopCurrentAudio = useCallback(() => {
     if (!currentAudioRef.current) return;
     currentAudioRef.current.pause();
@@ -75,7 +62,6 @@ export default function HomePage() {
     currentAudioRef.current = audio;
   }, []);
 
-  // ── スワイプ処理 ──
   const handleSwipe = useCallback(
     (direction: 'left' | 'right') => {
       if (!current) return;
@@ -83,11 +69,11 @@ export default function HomePage() {
 
       if (direction === 'right') {
         addFavorite(current.id);
-        recordLike(current.tags);          // コンテンツ嗜好ウェイト更新
-        saveAction(current.id, 'like');    // CF用DBに保存（ログイン時のみ）
+        recordLike(current.tags);
+        saveAction(current.id, 'like');
       } else {
-        recordPass(current.tags);          // 弱いペナルティ
-        saveAction(current.id, 'pass');    // CF用DBに保存（ログイン時のみ）
+        recordPass(current.tags);
+        saveAction(current.id, 'pass');
       }
 
       setSeenIds((prev) => new Set([...prev, current.id]));
@@ -99,23 +85,22 @@ export default function HomePage() {
     cardRef.current?.swipeTo(direction);
   }, []);
 
-  // リセット: 見たカードはリセット、嗜好ウェイトは保持（好みは蓄積され続ける）
   const handleReset = useCallback(() => {
     stopCurrentAudio();
     setSeenIds(new Set());
   }, [stopCurrentAudio]);
 
   return (
-    <div className="min-h-dvh flex flex-col items-center overflow-hidden">
+    <div className="min-h-dvh flex flex-col items-center" style={{ background: '#FFFFFF' }}>
 
-      {/* ━━━ ヘッダー ━━━ */}
-      <header className="w-full max-w-sm flex items-center justify-between px-5 pt-5 pb-3">
+      {/* ヘッダー */}
+      <header
+        className="w-full max-w-sm flex items-center justify-between px-5 pt-5 pb-4"
+        style={{ borderBottom: '1px solid #F0F0F0' }}
+      >
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-fuchsia-300" />
-          <span
-            className="font-black text-xl tracking-tight bg-clip-text text-transparent"
-            style={{ backgroundImage: 'linear-gradient(90deg, #c4b5fd, #f0abfc, #fda4af)' }}
-          >
+          <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
+          <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
             V-Vibe
           </span>
         </div>
@@ -124,70 +109,58 @@ export default function HomePage() {
           <Link
             href="/favorites"
             className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
-            style={{ background: 'rgba(196,181,253,0.08)', border: '1px solid rgba(196,181,253,0.18)' }}
+            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
             aria-label="お気に入り"
           >
-            <Heart className="w-3.5 h-3.5 text-fuchsia-300 fill-fuchsia-300" />
-            <span className="text-violet-200 text-xs font-bold">{likedCount}</span>
+            <Heart className="w-3.5 h-3.5" style={{ color: BRAND, fill: BRAND }} />
+            <span className="text-xs font-bold" style={{ color: BRAND }}>{likedCount}</span>
             {likedCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-fuchsia-400" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ background: BRAND }} />
             )}
           </Link>
           <Link
             href="/register"
             className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-            style={{ background: 'rgba(196,181,253,0.08)', border: '1px solid rgba(196,181,253,0.18)' }}
+            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
             aria-label="Vライバー登録"
           >
-            <UserPlus className="w-3.5 h-3.5 text-violet-300" />
+            <UserPlus className="w-3.5 h-3.5" style={{ color: '#555555' }} />
           </Link>
           <Link
             href="/post"
             className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-            style={{ background: 'rgba(196,181,253,0.08)', border: '1px solid rgba(196,181,253,0.18)' }}
+            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
             aria-label="ボイス投稿"
           >
-            <Mic className="w-3.5 h-3.5 text-fuchsia-300" />
+            <Mic className="w-3.5 h-3.5" style={{ color: '#555555' }} />
           </Link>
           <UserMenu />
         </div>
       </header>
 
-      {/* ━━━ カードエリア ━━━ */}
+      {/* カードエリア */}
       <main className="flex-1 w-full max-w-sm px-4 flex items-center justify-center">
         <div className="relative w-full" style={{ height: 'calc(100dvh - 180px)' }}>
           {loading ? (
-            /* ローディングスケルトン */
-            <div
-              className="absolute inset-0 rounded-3xl animate-pulse"
-              style={{ background: 'rgba(196,181,253,0.06)', border: '1px solid rgba(196,181,253,0.1)' }}
-            >
+            <div className="absolute inset-0 rounded-3xl animate-pulse" style={{ background: '#F5F5F5', border: '1px solid #E8E8E8' }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                <Sparkles className="w-8 h-8 text-fuchsia-300/30" />
-                <p className="text-xs" style={{ color: 'rgba(196,181,253,0.3)' }}>Vライバーを読み込み中…</p>
+                <Sparkles className="w-8 h-8" style={{ color: '#DDDDDD' }} />
+                <p className="text-xs" style={{ color: '#AAAAAA' }}>Vライバーを読み込み中…</p>
               </div>
             </div>
           ) : !isFinished ? (
             <>
-              {/* 背面カード（次をちら見せ） */}
+              {/* 背面カード */}
               {next && (
                 <div
                   className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none"
-                  style={{ transform: 'scale(0.93) translateY(14px)', opacity: 0.45 }}
-                >
-                  <div
-                    className="w-full h-full"
-                    style={{ background: `linear-gradient(165deg, ${next.color}28 0%, #1d1040 100%)` }}
-                  >
-                    <img src={next.imageUrl} alt="" className="w-full h-full object-cover" draggable={false} />
-                  </div>
-                </div>
+                  style={{ transform: 'scale(0.93) translateY(14px)', opacity: 0.4, background: '#FFFFFF', border: '1px solid #E8E8E8' }}
+                />
               )}
 
               {/* 前面カード */}
               {current && (
                 <>
-                  {/* レコメンド理由バッジ（嗜好データがある場合のみ表示） */}
                   {(hasHistory || cfScores.size > 0) && (
                     <RecommendBadge vliver={current} weights={weights} cfScores={cfScores} />
                   )}
@@ -205,20 +178,16 @@ export default function HomePage() {
             /* 全員チェック完了 */
             <div className="flex flex-col items-center justify-center h-full gap-5 text-center px-4">
               <div
-                className="w-24 h-24 rounded-full flex items-center justify-center"
-                style={{
-                  background: 'linear-gradient(135deg, #7c3aed44, #ec489944)',
-                  border: '2px solid rgba(196,181,253,0.25)',
-                  boxShadow: '0 0 40px rgba(196,181,253,0.15)',
-                }}
+                className="w-20 h-20 rounded-full flex items-center justify-center"
+                style={{ background: `${BRAND}15`, border: `2px solid ${BRAND}30` }}
               >
-                <Heart className="w-11 h-11" style={{ color: '#f0abfc', fill: '#f0abfc' }} />
+                <Heart className="w-9 h-9" style={{ color: BRAND, fill: BRAND }} />
               </div>
               <div>
-                <h2 className="text-violet-50 text-2xl font-black">全員チェック完了！</h2>
-                <p className="text-sm mt-2 leading-relaxed" style={{ color: 'rgba(196,181,253,0.5)' }}>
+                <h2 className="text-2xl font-black" style={{ color: '#111111' }}>全員チェック完了！</h2>
+                <p className="text-sm mt-2 leading-relaxed" style={{ color: '#555555' }}>
                   {likedCount > 0
-                    ? `${likedCount}人のVライバーをお気に入りに追加しました ✨`
+                    ? `${likedCount}人のVライバーをお気に入りに追加しました`
                     : 'まだ誰もお気に入りしていません。'}
                 </p>
               </div>
@@ -226,8 +195,8 @@ export default function HomePage() {
                 {likedCount > 0 && (
                   <Link
                     href="/favorites"
-                    className="flex items-center justify-center gap-2 py-3 rounded-full font-bold text-sm text-white"
-                    style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', boxShadow: '0 4px 20px rgba(168,85,247,0.3)' }}
+                    className="flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm text-white"
+                    style={{ background: BRAND, boxShadow: `0 4px 16px ${BRAND}40` }}
                   >
                     <Heart className="w-4 h-4 fill-white" />
                     お気に入りを見る
@@ -235,12 +204,8 @@ export default function HomePage() {
                 )}
                 <button
                   onClick={handleReset}
-                  className="flex items-center justify-center gap-2 py-3 rounded-full font-bold text-sm transition-all hover:scale-105"
-                  style={{
-                    color: 'rgba(196,181,253,0.7)',
-                    border: '1px solid rgba(196,181,253,0.2)',
-                    background: 'rgba(196,181,253,0.06)',
-                  }}
+                  className="flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all hover:scale-105"
+                  style={{ color: '#555555', border: '1px solid #E8E8E8', background: '#FFFFFF' }}
                 >
                   <RotateCcw className="w-4 h-4" />
                   もう一度見る
@@ -251,24 +216,21 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* ━━━ ボトムアクションボタン ━━━ */}
-      {!isFinished && (
+      {/* ボトムアクションボタン */}
+      {!isFinished && !loading && (
         <div className="w-full max-w-sm flex items-center justify-center gap-10 py-5">
           <button
             onClick={() => handleButtonSwipe('left')}
             className="w-14 h-14 rounded-full flex items-center justify-center transition-all active:scale-90 hover:scale-105"
-            style={{ background: 'rgba(109,40,217,0.15)', border: '1.5px solid rgba(196,181,253,0.2)' }}
+            style={{ background: '#FFFFFF', border: '1px solid #E8E8E8', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
             aria-label="パス"
           >
-            <X className="w-6 h-6 text-violet-300/70" />
+            <X className="w-6 h-6" style={{ color: '#AAAAAA' }} />
           </button>
           <button
             onClick={() => handleButtonSwipe('right')}
             className="w-[4.5rem] h-[4.5rem] rounded-full flex items-center justify-center active:scale-90 transition-transform hover:scale-105"
-            style={{
-              background: 'linear-gradient(135deg, #f472b6 0%, #a855f7 100%)',
-              boxShadow: '0 6px 28px rgba(244,114,182,0.40), 0 2px 8px rgba(0,0,0,0.2)',
-            }}
+            style={{ background: BRAND, boxShadow: `0 6px 24px ${BRAND}50` }}
             aria-label="お気に入りに追加"
           >
             <Heart className="w-7 h-7 text-white fill-white" />
@@ -279,11 +241,6 @@ export default function HomePage() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// レコメンド理由バッジ
-// 「あなたが好きな #歌 タグ」のように表示して
-// なぜこのVライバーが出てきたかを可視化する
-// ─────────────────────────────────────────────────────────────
 import type { VLiver } from '@/components/SwipeCard';
 import type { TagWeights } from '@/hooks/usePreferences';
 import type { CFScoreMap } from '@/hooks/useCFScores';
@@ -297,18 +254,17 @@ function RecommendBadge({
   weights: TagWeights;
   cfScores: CFScoreMap;
 }) {
-  // コンテンツスコアの主要タグ
   const topTag = vliver.tags
     .filter((tag) => (weights[tag] ?? 0) > 0)
     .sort((a, b) => (weights[b] ?? 0) - (weights[a] ?? 0))[0];
 
   const cfScore      = cfScores.get(vliver.id) ?? 0;
   const contentScore = vliver.tags.reduce((s, t) => s + (weights[t] ?? 0), 0);
-
-  // CF スコアがコンテンツスコアより支配的な場合は CF バッジを優先表示
-  const showCF = cfScore > 0 && cfScore * 0.6 > contentScore * 0.4;
+  const showCF       = cfScore > 0 && cfScore * 0.6 > contentScore * 0.4;
 
   if (!showCF && !topTag) return null;
+
+  const color = showCF ? '#555555' : BRAND;
 
   return (
     <div
@@ -316,21 +272,16 @@ function RecommendBadge({
                  flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold
                  whitespace-nowrap pointer-events-none"
       style={{
-        background: 'rgba(196,181,253,0.12)',
-        border: '1px solid rgba(196,181,253,0.22)',
-        backdropFilter: 'blur(8px)',
-        color: 'rgba(250,245,255,0.75)',
+        background: `${color}0E`,
+        border: `1px solid ${color}22`,
+        color,
       }}
     >
-      <Sparkles className="w-3 h-3 text-fuchsia-300" />
+      <Sparkles className="w-3 h-3" style={{ color }} />
       {showCF ? (
         '似た趣味のユーザーに人気'
       ) : (
-        <>
-          あなたが好きな
-          <span style={{ color: vliver.color, fontWeight: 800 }}>#{topTag}</span>
-          タグ
-        </>
+        <>あなたが好きな <strong>#{topTag}</strong> タグ</>
       )}
     </div>
   );
