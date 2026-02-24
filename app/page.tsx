@@ -160,18 +160,18 @@ export default function HomePage() {
 
               {/* 前面カード */}
               {current && (
-                <>
-                  {(hasHistory || cfScores.size > 0) && (
-                    <RecommendBadge vliver={current} weights={weights} cfScores={cfScores} />
-                  )}
-                  <SwipeCard
-                    key={current.id}
-                    ref={cardRef}
-                    vliver={current}
-                    onSwipe={handleSwipe}
-                    onAudioPlay={handleAudioPlay}
-                  />
-                </>
+                <SwipeCard
+                  key={current.id}
+                  ref={cardRef}
+                  vliver={current}
+                  onSwipe={handleSwipe}
+                  onAudioPlay={handleAudioPlay}
+                  recommendBadge={
+                    (hasHistory || cfScores.size > 0)
+                      ? <RecommendBadge vliver={current} weights={weights} cfScores={cfScores} />
+                      : undefined
+                  }
+                />
               )}
             </>
           ) : (
@@ -264,25 +264,14 @@ function RecommendBadge({
 
   if (!showCF && !topTag) return null;
 
-  const color = showCF ? '#555555' : BRAND;
-
   return (
-    <div
-      className="absolute top-4 left-1/2 -translate-x-1/2 z-10
-                 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold
-                 whitespace-nowrap pointer-events-none"
-      style={{
-        background: `${color}0E`,
-        border: `1px solid ${color}22`,
-        color,
-      }}
-    >
-      <Sparkles className="w-3 h-3" style={{ color }} />
+    <p className="inline-flex items-center gap-1 text-[11px] font-bold" style={{ color: '#AAAAAA' }}>
+      <Sparkles className="w-2.5 h-2.5" style={{ color: '#AAAAAA' }} />
       {showCF ? (
         '似た趣味のユーザーに人気'
       ) : (
-        <>あなたが好きな <strong>#{topTag}</strong> タグ</>
+        <>あなたが好きな <span style={{ color: '#888888' }}>#{topTag}</span> タグ</>
       )}
-    </div>
+    </p>
   );
 }
