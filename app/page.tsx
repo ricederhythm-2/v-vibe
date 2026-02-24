@@ -139,7 +139,7 @@ export default function HomePage() {
       </header>
 
       {/* カードエリア */}
-      <main className="flex-1 w-full max-w-sm px-4 flex items-center justify-center">
+      <main className="flex-1 w-full max-w-sm px-4 pt-4 flex items-center justify-center">
         <div className="relative w-full" style={{ height: 'calc(100dvh - 180px)' }}>
           {loading ? (
             <div className="absolute inset-0 rounded-3xl animate-pulse" style={{ background: '#F5F5F5', border: '1px solid #E8E8E8' }}>

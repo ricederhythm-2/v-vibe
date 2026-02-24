@@ -59,8 +59,8 @@ export default function FavoritesList() {
   if (favorites.length === 0) return <EmptyState />;
 
   return (
-    <div className="w-full max-w-sm mx-auto px-4 pb-12">
-      <p className="text-right text-xs mb-4" style={{ color: '#AAAAAA' }}>
+    <div className="w-full max-w-sm mx-auto px-4 pt-4 pb-12">
+      <p className="text-right text-xs mb-2" style={{ color: '#AAAAAA' }}>
         {favorites.length}人をお気に入り中
       </p>
 
