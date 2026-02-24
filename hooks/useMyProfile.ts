@@ -27,9 +27,11 @@ export function useMyProfile() {
         .from('vliver_profiles')
         .select('*')
         .eq('owner_id', user.id)
-        .maybeSingle()
-        .then(({ data }) => {
-          setProfile(data);
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .then(({ data, error }) => {
+          if (error) console.error('useMyProfile:', error);
+          setProfile(data?.[0] ?? null);
           setLoading(false);
         });
     });

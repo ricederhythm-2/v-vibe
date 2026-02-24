@@ -116,6 +116,14 @@ export default function RegisterForm() {
     if (!user) { router.push('/login?next=/register'); return; }
 
     try {
+      // 既にプロフィールがある場合は二重登録しない
+      const { data: existing } = await supabase
+        .from('vliver_profiles')
+        .select('id')
+        .eq('owner_id', user.id)
+        .limit(1);
+      if (existing && existing.length > 0) { setDone(true); return; }
+
       let imagePath: string | null = null;
       if (form.imageFile) {
         const ext = form.imageFile.name.split('.').pop() ?? 'jpg';
