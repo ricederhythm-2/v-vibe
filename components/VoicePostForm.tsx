@@ -3,13 +3,11 @@
 import { useState, useRef, useCallback, type ChangeEvent, type DragEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle, Mic, User } from 'lucide-react';
+import { Upload, X, Check, AlertCircle, Mic, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useMyProfile } from '@/hooks/useMyProfile';
 
 const BRAND = '#EF5285';
-
-const STEPS = ['投稿内容', 'ボイスアップロード'] as const;
 
 const RIGHTS_ITEMS = [
   { id: 'own_voice'   as const, text: 'アップロードする音声の著作権が、自分または所属事務所に帰属していることを確認しました' },
@@ -46,7 +44,6 @@ export default function VoicePostForm() {
   const router = useRouter();
   const { profile, loading: profileLoading } = useMyProfile();
 
-  const [step, setStep]     = useState(0);
   const [catchCopy, setCatchCopy] = useState('');
   const [voiceFile, setVoiceFile] = useState<File | null>(null);
   const [voiceError, setVoiceError]   = useState('');
@@ -78,13 +75,7 @@ export default function VoicePostForm() {
     });
   }, []);
 
-  const canProceed = useCallback((): boolean => {
-    switch (step) {
-      case 0: return !!catchCopy.trim() && catchCopy.length <= 60;
-      case 1: return !!voiceFile && !voiceError && RIGHTS_ITEMS.every((r) => rights[r.id]);
-      default: return false;
-    }
-  }, [step, catchCopy, voiceFile, voiceError, rights]);
+  const canSubmit = !!catchCopy.trim() && catchCopy.length <= 60 && !!voiceFile && !voiceError && RIGHTS_ITEMS.every((r) => rights[r.id]);
 
   const handleSubmit = async () => {
     if (!profile) return;
@@ -167,7 +158,7 @@ export default function VoicePostForm() {
         </div>
         <div className="flex flex-col gap-3 w-full max-w-[220px]">
           <button
-            onClick={() => { setStep(0); setCatchCopy(''); setVoiceFile(null); setRights({ own_voice: false, no_bgm: false, terms: false }); setDone(false); }}
+            onClick={() => { setCatchCopy(''); setVoiceFile(null); setRights({ own_voice: false, no_bgm: false, terms: false }); setDone(false); }}
             className="flex items-center justify-center gap-2 py-3 rounded-full font-bold text-sm text-white hover:scale-105 transition-transform"
             style={{ background: BRAND, boxShadow: '0 4px 16px #EF528540' }}>
             もう1枚投稿する
@@ -188,23 +179,10 @@ export default function VoicePostForm() {
   }
 
   return (
-    <div className="w-full max-w-[430px] mx-auto px-4 pb-12">
-      {/* プログレス */}
-      <div className="flex gap-1.5 mb-8">
-        {STEPS.map((label, i) => (
-          <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
-            <div className="w-full h-1 rounded-full transition-all duration-300"
-              style={{ background: i <= step ? BRAND : '#E8E8E8' }} />
-            <span className="text-[9px] font-bold text-center leading-tight transition-colors duration-300"
-              style={{ color: i === step ? BRAND : '#AAAAAA' }}>
-              {label}
-            </span>
-          </div>
-        ))}
-      </div>
+    <div className="w-full max-w-[430px] mx-auto px-4 pb-12 space-y-5">
 
       {/* プロフィールカード */}
-      <div className="flex items-center gap-3 mb-6 rounded-2xl px-3 py-2.5"
+      <div className="flex items-center gap-3 rounded-2xl px-3 py-2.5"
         style={{ background: '#F9F9F9', border: '1px solid #E8E8E8' }}>
         <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-[#F0F0F0]">
           {profile.image_path && (
@@ -224,140 +202,102 @@ export default function VoicePostForm() {
         </div>
       </div>
 
-      {/* STEP 0 */}
-      {step === 0 && (
-        <div className="space-y-5">
-          <h2 className="text-[#111111] text-lg font-black">投稿内容</h2>
-          <Field label="キャッチコピー" required counter={{ current: catchCopy.length, max: 60 }}>
-            <textarea
-              value={catchCopy}
-              onChange={(e) => setCatchCopy(e.target.value)}
-              placeholder="今夜も深夜に遊びにきてね♪ 一緒に癒しの時間を過ごそう"
-              rows={3}
-              className={`${inputCls} resize-none ${catchCopy.length > 60 ? 'border-rose-500/60' : ''}`}
-            />
-            <p className="mt-1 text-[#AAAAAA] text-[11px]">
-              スワイプ画面でカードに表示されるひと言です
-            </p>
-          </Field>
+      {/* キャッチコピー */}
+      <Field label="キャッチコピー" required counter={{ current: catchCopy.length, max: 60 }}>
+        <textarea
+          value={catchCopy}
+          onChange={(e) => setCatchCopy(e.target.value)}
+          placeholder="今夜も深夜に遊びにきてね♪ 一緒に癒しの時間を過ごそう"
+          rows={3}
+          className={`${inputCls} resize-none ${catchCopy.length > 60 ? 'border-rose-500/60' : ''}`}
+        />
+        <p className="mt-1 text-[#AAAAAA] text-[11px]">
+          スワイプ画面でカードに表示されるひと言です
+        </p>
+      </Field>
+
+      {/* ボイスファイル */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <label className={labelCls}>ボイスファイル <span className="text-rose-400">*</span></label>
+          <span className="text-[#AAAAAA] text-xs">MP3/M4A/WAV・{MAX_VOICE_SEC}秒・{MAX_VOICE_MB}MB以内</span>
         </div>
-      )}
-
-      {/* STEP 1 */}
-      {step === 1 && (
-        <div className="space-y-5">
-          <h2 className="text-[#111111] text-lg font-black">ボイスをアップロード</h2>
-
-          {/* ドロップゾーン */}
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className={labelCls}>ボイスファイル <span className="text-rose-400">*</span></label>
-              <span className="text-[#AAAAAA] text-xs">MP3/M4A/WAV・{MAX_VOICE_SEC}秒・{MAX_VOICE_MB}MB以内</span>
-            </div>
-            <div
-              className={`relative rounded-2xl border-2 border-dashed transition-colors flex flex-col items-center justify-center gap-3 py-8 ${
-                voiceDragOver ? 'border-[#EF5285]/40 bg-[#EF5285]/05'
-                : voiceFile ? 'border-emerald-500/40 bg-emerald-500/10'
-                : 'border-[#E8E8E8] hover:border-[#EF5285]/40'
-              }`}
-              onDragOver={(e) => { e.preventDefault(); setVoiceDragOver(true); }}
-              onDragLeave={() => setVoiceDragOver(false)}
-              onDrop={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setVoiceDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleVoiceFile(f); }}
-            >
-              {voiceFile ? (
-                <>
-                  <Mic className="w-8 h-8 text-emerald-400" />
-                  <div className="text-center">
-                    <p className="text-emerald-600 text-sm font-semibold">{voiceFile.name}</p>
-                    <p className="text-[#AAAAAA] text-xs mt-0.5">{(voiceFile.size / (1024 * 1024)).toFixed(1)} MB</p>
-                  </div>
-                  <button
-                    onClick={() => setVoiceFile(null)}
-                    className="flex items-center gap-1 text-[#AAAAAA] text-xs hover:text-[#555555] transition-colors">
-                    <X className="w-3.5 h-3.5" />変更する
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Upload className="w-8 h-8 text-[#AAAAAA]" />
-                  <p className="text-[#AAAAAA] text-sm">タップまたはドロップ</p>
-                  <button
-                    onClick={() => voiceInputRef.current?.click()}
-                    className="px-4 py-2 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
-                    ファイルを選択
-                  </button>
-                </>
-              )}
-            </div>
-            <input ref={voiceInputRef} type="file" accept="audio/*" className="hidden"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => { const f = e.target.files?.[0]; if (f) handleVoiceFile(f); }} />
-            {voiceError && (
-              <div className="mt-2 flex items-center gap-1.5 text-rose-400 text-xs">
-                <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{voiceError}
+        <div
+          className={`relative rounded-2xl border-2 border-dashed transition-colors flex flex-col items-center justify-center gap-3 py-8 ${
+            voiceDragOver ? 'border-[#EF5285]/40 bg-[#EF5285]/05'
+            : voiceFile ? 'border-emerald-500/40 bg-emerald-500/10'
+            : 'border-[#E8E8E8] hover:border-[#EF5285]/40'
+          }`}
+          onDragOver={(e) => { e.preventDefault(); setVoiceDragOver(true); }}
+          onDragLeave={() => setVoiceDragOver(false)}
+          onDrop={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setVoiceDragOver(false); const f = e.dataTransfer.files[0]; if (f) handleVoiceFile(f); }}
+        >
+          {voiceFile ? (
+            <>
+              <Mic className="w-8 h-8 text-emerald-400" />
+              <div className="text-center">
+                <p className="text-emerald-600 text-sm font-semibold">{voiceFile.name}</p>
+                <p className="text-[#AAAAAA] text-xs mt-0.5">{(voiceFile.size / (1024 * 1024)).toFixed(1)} MB</p>
               </div>
-            )}
-          </div>
-
-          {/* 権利確認チェック */}
-          <div className="space-y-3">
-            <div className="flex items-start gap-2 rounded-xl px-3 py-2.5"
-              style={{ background: '#FFF9F9', border: '1px solid #E8E8E8' }}>
-              <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
-              <p className="text-amber-400/80 text-xs leading-relaxed">投稿前に以下を必ずご確認ください</p>
-            </div>
-            {RIGHTS_ITEMS.map((item) => (
-              <button key={item.id} onClick={() => setRights((p) => ({ ...p, [item.id]: !p[item.id] }))}
-                className={`w-full flex items-start gap-3 rounded-2xl p-3.5 border text-left transition-all ${rights[item.id] ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-[#E8E8E8] bg-[#F9F9F9] hover:border-[#EF5285]/30'}`}>
-                <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${rights[item.id] ? 'bg-emerald-500' : 'bg-[#E8E8E8]'}`}>
-                  {rights[item.id] && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
-                </div>
-                <span className={`text-xs leading-relaxed ${rights[item.id] ? 'text-[#111111]' : 'text-[#555555]'}`}>{item.text}</span>
+              <button
+                onClick={() => setVoiceFile(null)}
+                className="flex items-center gap-1 text-[#AAAAAA] text-xs hover:text-[#555555] transition-colors">
+                <X className="w-3.5 h-3.5" />変更する
               </button>
-            ))}
+            </>
+          ) : (
+            <>
+              <Upload className="w-8 h-8 text-[#AAAAAA]" />
+              <p className="text-[#AAAAAA] text-sm">タップまたはドロップ</p>
+              <button
+                onClick={() => voiceInputRef.current?.click()}
+                className="px-4 py-2 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
+                ファイルを選択
+              </button>
+            </>
+          )}
+        </div>
+        <input ref={voiceInputRef} type="file" accept="audio/*" className="hidden"
+          onChange={(e: ChangeEvent<HTMLInputElement>) => { const f = e.target.files?.[0]; if (f) handleVoiceFile(f); }} />
+        {voiceError && (
+          <div className="mt-2 flex items-center gap-1.5 text-rose-400 text-xs">
+            <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{voiceError}
           </div>
+        )}
+      </div>
 
-          {submitError && (
-            <div className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs"
-              style={{ background: 'rgba(244,114,182,0.1)', border: '1px solid rgba(244,114,182,0.2)', color: 'rgba(253,164,175,0.9)' }}>
-              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{submitError}
+      {/* 権利確認チェック */}
+      <div className="space-y-3">
+        <div className="flex items-start gap-2 rounded-xl px-3 py-2.5"
+          style={{ background: '#FFF9F9', border: '1px solid #E8E8E8' }}>
+          <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+          <p className="text-amber-400/80 text-xs leading-relaxed">投稿前に以下を必ずご確認ください</p>
+        </div>
+        {RIGHTS_ITEMS.map((item) => (
+          <button key={item.id} onClick={() => setRights((p) => ({ ...p, [item.id]: !p[item.id] }))}
+            className={`w-full flex items-start gap-3 rounded-2xl p-3.5 border text-left transition-all ${rights[item.id] ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-[#E8E8E8] bg-[#F9F9F9] hover:border-[#EF5285]/30'}`}>
+            <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${rights[item.id] ? 'bg-emerald-500' : 'bg-[#E8E8E8]'}`}>
+              {rights[item.id] && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
             </div>
-          )}
-
-          <button onClick={handleSubmit} disabled={!canProceed() || isSubmitting}
-            className="w-full py-4 rounded-2xl font-black text-base text-white transition-all"
-            style={canProceed() && !isSubmitting
-              ? { background: BRAND, boxShadow: '0 4px 24px #EF528540' }
-              : { background: '#E8E8E8', color: '#AAAAAA' }}>
-            {isSubmitting ? 'アップロード中…' : canProceed() ? 'ボイスを投稿する ✨' : 'ファイルと確認事項をチェックしてください'}
+            <span className={`text-xs leading-relaxed ${rights[item.id] ? 'text-[#111111]' : 'text-[#555555]'}`}>{item.text}</span>
           </button>
+        ))}
+      </div>
+
+      {submitError && (
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs"
+          style={{ background: 'rgba(244,114,182,0.1)', border: '1px solid rgba(244,114,182,0.2)', color: 'rgba(253,164,175,0.9)' }}>
+          <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{submitError}
         </div>
       )}
 
-      {/* ナビゲーション */}
-      {step < STEPS.length - 1 && (
-        <div className="mt-8 flex items-center gap-3">
-          {step > 0 && (
-            <button onClick={() => setStep((s) => s - 1)}
-              className="flex items-center gap-1.5 px-4 py-3 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
-              <ChevronLeft className="w-4 h-4" />戻る
-            </button>
-          )}
-          <button onClick={() => setStep((s) => s + 1)} disabled={!canProceed()}
-            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl font-bold text-sm text-white transition-all"
-            style={canProceed()
-              ? { background: BRAND, boxShadow: '0 4px 16px #EF528540' }
-              : { background: '#E8E8E8', color: '#AAAAAA' }}>
-            次へ<ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
-      {step > 0 && step < STEPS.length - 1 && (
-        <button onClick={() => setStep((s) => s - 1)}
-          className="mt-3 w-full flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-[#E8E8E8] text-[#555555] text-sm font-medium hover:bg-[#F9F9F9] transition-colors">
-          <ChevronLeft className="w-4 h-4" />戻る
-        </button>
-      )}
+      <button onClick={handleSubmit} disabled={!canSubmit || isSubmitting}
+        className="w-full py-4 rounded-2xl font-black text-base text-white transition-all"
+        style={canSubmit && !isSubmitting
+          ? { background: BRAND, boxShadow: '0 4px 24px #EF528540' }
+          : { background: '#E8E8E8', color: '#AAAAAA' }}>
+        {isSubmitting ? 'アップロード中…' : canSubmit ? 'ボイスを投稿する ✨' : 'すべての項目を入力してください'}
+      </button>
     </div>
   );
 }
