@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 const STORAGE_KEY = 'v-vibe-favorites';
 
@@ -14,6 +15,19 @@ const STORAGE_KEY = 'v-vibe-favorites';
 export function useFavorites() {
   const [ids, setIds]           = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const userIdRef               = useRef<string | null>(null);
+  const supabase                = useRef(createClient()).current;
+
+  // ログイン中ユーザーIDを取得
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      userIdRef.current = data.user?.id ?? null;
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      userIdRef.current = session?.user?.id ?? null;
+    });
+    return () => subscription.unsubscribe();
+  }, [supabase]);
 
   // ── マウント後に localStorage から復元 ──
   useEffect(() => {
@@ -34,11 +48,23 @@ export function useFavorites() {
 
   const addFavorite = useCallback((id: string) => {
     setIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
-  }, []);
+    const userId = userIdRef.current;
+    if (userId) {
+      supabase.from('favorites').upsert({ user_id: userId, post_id: id }).then(({ error }) => {
+        if (error) console.error('favorites insert:', error);
+      });
+    }
+  }, [supabase]);
 
   const removeFavorite = useCallback((id: string) => {
     setIds((prev) => prev.filter((i) => i !== id));
-  }, []);
+    const userId = userIdRef.current;
+    if (userId) {
+      supabase.from('favorites').delete().eq('user_id', userId).eq('post_id', id).then(({ error }) => {
+        if (error) console.error('favorites delete:', error);
+      });
+    }
+  }, [supabase]);
 
   return {
     likedIds: new Set(ids),   // スワイプ画面: O(1) has() 検索
