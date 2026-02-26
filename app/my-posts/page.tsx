@@ -24,7 +24,7 @@ export default function MyPostsPage() {
           </div>
         </div>
       </header>
-      <MyPostsList />
+      <main className="pt-6"><MyPostsList /></main>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </header>
-      <RegisterForm />
+      <main className="pt-6"><RegisterForm /></main>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function FavoritesPage() {
           </div>
         </div>
       </header>
-      <FavoritesList />
+      <main className="pt-6"><FavoritesList /></main>
     </div>
   );
 }

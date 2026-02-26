@@ -24,7 +24,7 @@ export default function PostPage() {
           </div>
         </div>
       </header>
-      <VoicePostForm />
+      <main className="pt-6"><VoicePostForm /></main>
     </div>
   );
 }
