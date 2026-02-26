@@ -49,7 +49,7 @@ export function useVlivers() {
           (data ?? [])
             .filter((row) => row.vliver_profiles)
             .map((row) => {
-              const p = row.vliver_profiles as {
+              const p = row.vliver_profiles as unknown as {
                 id: string; name: string; handle: string;
                 image_path: string | null; color: string;
                 tags: string[]; description: string;
