@@ -9,6 +9,7 @@ export interface VoicePost {
   voice_path: string;
   is_published: boolean;
   created_at: string;
+  like_count: number;
 }
 
 export function useMyPosts() {
@@ -24,9 +25,25 @@ export function useMyPosts() {
         .select('id, catch_copy, voice_path, is_published, created_at')
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false })
-        .then(({ data, error }) => {
+        .then(async ({ data, error }) => {
           if (error) console.error('useMyPosts:', error);
-          setPosts(data ?? []);
+          const rows = data ?? [];
+
+          // いいね数を取得
+          const postIds = rows.map((p) => p.id);
+          let likeMap: Record<string, number> = {};
+          if (postIds.length > 0) {
+            const { data: likeData } = await supabase
+              .from('swipe_events')
+              .select('voice_post_id')
+              .eq('action', 'like')
+              .in('voice_post_id', postIds);
+            for (const row of likeData ?? []) {
+              likeMap[row.voice_post_id] = (likeMap[row.voice_post_id] ?? 0) + 1;
+            }
+          }
+
+          setPosts(rows.map((p) => ({ ...p, like_count: likeMap[p.id] ?? 0 })));
           setLoading(false);
         });
     });
@@ -46,7 +63,7 @@ export function useMyPosts() {
           .select('id, catch_copy, voice_path, is_published, created_at')
           .eq('owner_id', user.id)
           .order('created_at', { ascending: false });
-        setPosts(data ?? []);
+        setPosts((data ?? []).map((p) => ({ ...p, like_count: 0 })));
       }
     }
   }, []);

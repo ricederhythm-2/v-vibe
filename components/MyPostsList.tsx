@@ -3,7 +3,7 @@
 import { useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Pencil, Trash2, Check, X, Mic, ArrowRight } from 'lucide-react';
+import { Play, Pause, Pencil, Trash2, Check, X, Mic, ArrowRight, Heart } from 'lucide-react';
 import { useMyPosts, type VoicePost } from '@/hooks/useMyPosts';
 
 const BRAND = '#EF5285';
@@ -137,18 +137,24 @@ function PostCard({
 
           {/* コンテンツエリア */}
           <div className="flex-1 px-3 py-3 min-w-0">
-            {/* 投稿日 */}
-            <p className="text-[10px] mb-1.5" style={{ color: '#AAAAAA' }}>
-              {dateLabel}
-              {!post.is_published && (
-                <span
-                  className="ml-2 px-1.5 py-0.5 rounded-full text-[9px] font-bold"
-                  style={{ background: '#FFF3CD', color: '#856404' }}
-                >
-                  非公開
-                </span>
-              )}
-            </p>
+            {/* 投稿日 + いいね数 */}
+            <div className="flex items-center justify-between mb-1.5">
+              <p className="text-[10px]" style={{ color: '#AAAAAA' }}>
+                {dateLabel}
+                {!post.is_published && (
+                  <span
+                    className="ml-2 px-1.5 py-0.5 rounded-full text-[9px] font-bold"
+                    style={{ background: '#FFF3CD', color: '#856404' }}
+                  >
+                    非公開
+                  </span>
+                )}
+              </p>
+              <span className="flex items-center gap-1 text-[11px] font-bold" style={{ color: BRAND }}>
+                <Heart className="w-3 h-3 fill-current" />
+                {post.like_count}
+              </span>
+            </div>
 
             {/* キャッチコピー */}
             {editing ? (
