@@ -59,7 +59,7 @@ export default function FavoritesList() {
   if (favorites.length === 0) return <EmptyState />;
 
   return (
-    <div className="w-full max-w-sm mx-auto px-4 pt-4 pb-12">
+    <div className="w-full max-w-[430px] mx-auto px-4 pt-4 pb-12">
       <p className="text-right text-xs mb-2" style={{ color: '#AAAAAA' }}>
         {favorites.length}人をお気に入り中
       </p>
@@ -108,9 +108,9 @@ function FavoriteCard({
         <div style={{ width: 3, flexShrink: 0, background: BRAND }} />
 
         {/* キャラクター画像 */}
-        <div className="w-20 flex-shrink-0 relative" style={{ background: '#FFF5F8' }}>
+        <div className="w-24 flex-shrink-0 relative" style={{ background: '#FFF5F8' }}>
           <img
-            src={vliver.imageUrl}
+            src={vliver.imageUrl || undefined}
             alt={vliver.name}
             className="absolute inset-0 w-full h-full object-cover object-top"
             draggable={false}
@@ -139,7 +139,7 @@ function FavoriteCard({
               {vliver.handle}
             </p>
 
-            <p className="text-xs mt-1.5 leading-snug line-clamp-1" style={{ color: '#555555' }}>
+            <p className="text-xs mt-1.5 leading-snug line-clamp-2" style={{ color: '#555555' }}>
               「{vliver.catchphrase}」
             </p>
 

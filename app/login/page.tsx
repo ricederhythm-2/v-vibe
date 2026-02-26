@@ -18,6 +18,7 @@ function LoginForm() {
       provider: 'x',
       options: {
         redirectTo: `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(next)}`,
+        queryParams: { force_login: 'true' },
       },
     });
   };

@@ -129,7 +129,7 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
             {/* 立ち絵エリア（残りを全て埋める） */}
             <div className="relative flex-1" style={{ background: '#FFF5F8' }}>
               <img
-                src={vliver.imageUrl}
+                src={vliver.imageUrl || undefined}
                 alt={vliver.name}
                 className="absolute inset-0 w-full h-full object-cover"
                 draggable={false}

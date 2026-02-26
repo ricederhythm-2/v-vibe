@@ -1,10 +1,10 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Mic } from 'lucide-react';
 import Link from 'next/link';
-import RegisterForm from '@/components/RegisterForm';
+import MyPostsList from '@/components/MyPostsList';
 
-export const metadata = { title: 'Vライバー登録 | V-Vibe' };
+export const metadata = { title: '投稿管理 | V-Vibe' };
 
-export default function RegisterPage() {
+export default function MyPostsPage() {
   return (
     <div className="min-h-dvh" style={{ background: '#FFFFFF' }}>
       <header className="w-full" style={{ borderBottom: '1px solid #F0F0F0' }}>
@@ -17,13 +17,13 @@ export default function RegisterPage() {
           >
             <ArrowLeft className="w-4 h-4" style={{ color: '#555555' }} />
           </Link>
-          <div>
-            <h1 className="font-black text-base leading-tight" style={{ color: '#111111' }}>Vライバー登録</h1>
-            <p className="text-xs" style={{ color: '#AAAAAA' }}>プロフィールを作成しましょう</p>
+          <div className="flex items-center gap-2">
+            <Mic className="w-4 h-4" style={{ color: '#EF5285' }} />
+            <h1 className="font-black text-base" style={{ color: '#111111' }}>投稿管理</h1>
           </div>
         </div>
       </header>
-      <RegisterForm />
+      <MyPostsList />
     </div>
   );
 }

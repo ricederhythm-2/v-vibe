@@ -27,7 +27,7 @@ export function useMyProfile() {
         .from('vliver_profiles')
         .select('*')
         .eq('owner_id', user.id)
-        .order('created_at', { ascending: true })
+        .order('created_at', { ascending: false })
         .limit(1)
         .then(({ data, error }) => {
           if (error) console.error('useMyProfile:', error);

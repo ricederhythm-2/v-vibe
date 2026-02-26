@@ -49,6 +49,7 @@ export default function HomePage() {
   const isFinished = remaining.length === 0;
   const likedCount = likedIds.size;
 
+
   const stopCurrentAudio = useCallback(() => {
     if (!currentAudioRef.current) return;
     currentAudioRef.current.pause();
@@ -93,58 +94,57 @@ export default function HomePage() {
   }, [stopCurrentAudio]);
 
   return (
-    <div className="min-h-dvh flex flex-col items-center" style={{ background: '#FFFFFF' }}>
+    <div className="h-dvh overflow-hidden flex flex-col" style={{ background: '#FFFFFF' }}>
 
       {/* ヘッダー */}
-      <header
-        className="w-full max-w-sm flex items-center justify-between px-5 pt-5 pb-4"
-        style={{ borderBottom: '1px solid #F0F0F0' }}
-      >
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
-          <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
-            V-Vibe
-          </span>
-        </div>
+      <header className="w-full flex-shrink-0" style={{ borderBottom: '1px solid #F0F0F0' }}>
+        <div className="w-full max-w-[430px] mx-auto flex items-center justify-between px-5 pt-5 pb-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
+            <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
+              V-Vibe
+            </span>
+          </div>
 
-        <div className="flex items-center gap-1.5">
-          <Link
-            href="/favorites"
-            className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
-            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-            aria-label="お気に入り"
-          >
-            <Heart className="w-3.5 h-3.5" style={{ color: BRAND, fill: BRAND }} />
-            <span className="text-xs font-bold" style={{ color: BRAND }}>{likedCount}</span>
-            {likedCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ background: BRAND }} />
-            )}
-          </Link>
-          {!myProfile && (
+          <div className="flex items-center gap-1.5">
             <Link
-              href="/register"
+              href="/favorites"
+              className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
+              style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
+              aria-label="お気に入り"
+            >
+              <Heart className="w-3.5 h-3.5" style={{ color: BRAND, fill: BRAND }} />
+              <span className="text-xs font-bold" style={{ color: BRAND }}>{likedCount}</span>
+              {likedCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ background: BRAND }} />
+              )}
+            </Link>
+            {!myProfile && (
+              <Link
+                href="/register"
+                className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
+                style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
+                aria-label="Vライバー登録"
+              >
+                <UserPlus className="w-3.5 h-3.5" style={{ color: '#555555' }} />
+              </Link>
+            )}
+            <Link
+              href="/post"
               className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
               style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-              aria-label="Vライバー登録"
+              aria-label="ボイス投稿"
             >
-              <UserPlus className="w-3.5 h-3.5" style={{ color: '#555555' }} />
+              <Mic className="w-3.5 h-3.5" style={{ color: '#555555' }} />
             </Link>
-          )}
-          <Link
-            href="/post"
-            className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-            aria-label="ボイス投稿"
-          >
-            <Mic className="w-3.5 h-3.5" style={{ color: '#555555' }} />
-          </Link>
-          <UserMenu />
+            <UserMenu />
+          </div>
         </div>
       </header>
 
       {/* カードエリア */}
-      <main className="flex-1 w-full max-w-sm px-4 pt-4 flex items-center justify-center">
-        <div className="relative w-full" style={{ height: 'calc(100dvh - 180px)' }}>
+      <main className="flex-1 min-h-0 w-full max-w-[430px] mx-auto px-4 pt-4">
+        <div className="relative w-full h-full">
           {loading ? (
             <div className="absolute inset-0 rounded-3xl animate-pulse" style={{ background: '#F5F5F5', border: '1px solid #E8E8E8' }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
@@ -222,7 +222,7 @@ export default function HomePage() {
 
       {/* ボトムアクションボタン */}
       {!isFinished && !loading && (
-        <div className="w-full max-w-sm flex items-center justify-center gap-10 py-5">
+        <div className="w-full max-w-[430px] mx-auto flex items-center justify-center gap-10 py-5">
           <button
             onClick={() => handleButtonSwipe('left')}
             className="w-14 h-14 rounded-full flex items-center justify-center transition-all active:scale-90 hover:scale-105"
@@ -258,24 +258,16 @@ function RecommendBadge({
   weights: TagWeights;
   cfScores: CFScoreMap;
 }) {
-  const topTag = vliver.tags
-    .filter((tag) => (weights[tag] ?? 0) > 0)
-    .sort((a, b) => (weights[b] ?? 0) - (weights[a] ?? 0))[0];
-
   const cfScore      = cfScores.get(vliver.id) ?? 0;
   const contentScore = vliver.tags.reduce((s, t) => s + (weights[t] ?? 0), 0);
   const showCF       = cfScore > 0 && cfScore * 0.6 > contentScore * 0.4;
 
-  if (!showCF && !topTag) return null;
+  if (!showCF) return null;
 
   return (
     <p className="inline-flex items-center gap-1 text-[11px] font-bold" style={{ color: '#AAAAAA' }}>
       <Sparkles className="w-2.5 h-2.5" style={{ color: '#AAAAAA' }} />
-      {showCF ? (
-        '似た趣味のユーザーに人気'
-      ) : (
-        <>あなたが好きな <span style={{ color: '#888888' }}>#{topTag}</span> タグ</>
-      )}
+      似た趣味のユーザーに人気
     </p>
   );
 }

@@ -18,7 +18,8 @@ const RIGHTS_ITEMS = [
 ] as const;
 type RightId = typeof RIGHTS_ITEMS[number]['id'];
 
-const MAX_VOICE_MB = 20;
+const MAX_VOICE_MB  = 20;
+const MAX_VOICE_SEC = 15;
 
 const inputCls = 'w-full bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 text-[#111111] placeholder-[#AAAAAA] text-sm focus:outline-none focus:border-[#EF5285] transition-colors';
 const labelCls = 'block text-[#555555] text-xs font-semibold uppercase tracking-wider';
@@ -60,7 +61,21 @@ export default function VoicePostForm() {
     setVoiceError('');
     if (!file.type.startsWith('audio/')) { setVoiceError('音声ファイル（MP3, M4A, WAV, OGG）を選択してください'); return; }
     if (file.size > MAX_VOICE_MB * 1024 * 1024) { setVoiceError(`${MAX_VOICE_MB}MB以内のファイルを選択してください`); return; }
-    setVoiceFile(file);
+
+    const url = URL.createObjectURL(file);
+    const audio = new window.Audio(url);
+    audio.addEventListener('loadedmetadata', () => {
+      URL.revokeObjectURL(url);
+      if (audio.duration > MAX_VOICE_SEC) {
+        setVoiceError(`${MAX_VOICE_SEC}秒以内の音声ファイルを選択してください（現在: ${Math.ceil(audio.duration)}秒）`);
+        return;
+      }
+      setVoiceFile(file);
+    });
+    audio.addEventListener('error', () => {
+      URL.revokeObjectURL(url);
+      setVoiceError('音声ファイルを読み込めませんでした。別のファイルをお試しください');
+    });
   }, []);
 
   const canProceed = useCallback((): boolean => {
@@ -157,6 +172,11 @@ export default function VoicePostForm() {
             style={{ background: BRAND, boxShadow: '0 4px 16px #EF528540' }}>
             もう1枚投稿する
           </button>
+          <Link href="/my-posts"
+            className="py-3 rounded-full font-bold text-sm text-center transition-all hover:scale-105"
+            style={{ color: BRAND, border: `1px solid ${BRAND}40`, background: `${BRAND}08` }}>
+            投稿一覧を見る
+          </Link>
           <Link href="/"
             className="py-3 rounded-full font-bold text-sm text-center transition-all hover:scale-105"
             style={{ color: '#555555', border: '1px solid #E8E8E8', background: '#F9F9F9' }}>
@@ -168,7 +188,7 @@ export default function VoicePostForm() {
   }
 
   return (
-    <div className="w-full max-w-sm mx-auto px-4 pb-12">
+    <div className="w-full max-w-[430px] mx-auto px-4 pb-12">
       {/* プログレス */}
       <div className="flex gap-1.5 mb-8">
         {STEPS.map((label, i) => (
@@ -232,7 +252,7 @@ export default function VoicePostForm() {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className={labelCls}>ボイスファイル <span className="text-rose-400">*</span></label>
-              <span className="text-[#AAAAAA] text-xs">MP3/M4A/WAV・{MAX_VOICE_MB}MB以内</span>
+              <span className="text-[#AAAAAA] text-xs">MP3/M4A/WAV・{MAX_VOICE_SEC}秒・{MAX_VOICE_MB}MB以内</span>
             </div>
             <div
               className={`relative rounded-2xl border-2 border-dashed transition-colors flex flex-col items-center justify-center gap-3 py-8 ${

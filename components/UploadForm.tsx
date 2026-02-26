@@ -387,7 +387,7 @@ export default function UploadForm() {
   // フォーム本体
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   return (
-    <div className="w-full max-w-sm mx-auto px-4 pb-12">
+    <div className="w-full max-w-[430px] mx-auto px-4 pb-12">
 
       {/* ── プログレスインジケーター ── */}
       <div className="flex gap-1.5 mb-8">

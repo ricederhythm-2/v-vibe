@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Pencil, UserPlus } from 'lucide-react';
+import { LogOut, Mic, Pencil, UserPlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useMyProfile } from '@/hooks/useMyProfile';
 import type { User } from '@supabase/supabase-js';
@@ -47,7 +47,7 @@ export default function UserMenu() {
   const initial = displayName[0].toUpperCase();
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center">
       <button
         onClick={() => setMenuOpen((o) => !o)}
         className="w-8 h-8 rounded-full overflow-hidden transition-all hover:scale-110 focus:outline-none"
@@ -82,6 +82,17 @@ export default function UserMenu() {
               <p className="text-xs truncate mt-0.5" style={{ color: '#AAAAAA' }}>{user.email}</p>
             </div>
 
+            {profile && (
+              <Link
+                href="/my-posts"
+                onClick={() => setMenuOpen(false)}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs transition-all hover:bg-gray-50"
+                style={{ color: '#555555' }}
+              >
+                <Mic className="w-3.5 h-3.5" />
+                投稿管理
+              </Link>
+            )}
             <Link
               href="/register"
               onClick={() => setMenuOpen(false)}
