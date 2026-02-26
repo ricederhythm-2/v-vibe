@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import VoicePostForm from '@/components/VoicePostForm';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: 'ボイス投稿 | V-Vibe' };
 
 export default function PostPage() {

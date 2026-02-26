@@ -2,6 +2,7 @@ import { ArrowLeft, Heart } from 'lucide-react';
 import Link from 'next/link';
 import FavoritesList from '@/components/FavoritesList';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: 'お気に入り | V-Vibe' };
 
 export default function FavoritesPage() {

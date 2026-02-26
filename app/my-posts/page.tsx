@@ -2,6 +2,7 @@ import { ArrowLeft, Mic } from 'lucide-react';
 import Link from 'next/link';
 import MyPostsList from '@/components/MyPostsList';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: '投稿管理 | V-Vibe' };
 
 export default function MyPostsPage() {

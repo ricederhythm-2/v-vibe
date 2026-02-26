@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useCallback, useRef, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Heart, RotateCcw, Sparkles, X, UserPlus, Mic } from 'lucide-react';
