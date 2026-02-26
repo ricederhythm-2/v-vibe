@@ -12,6 +12,7 @@ import { useVlivers } from '@/hooks/useVlivers';
 import { useCFScores } from '@/hooks/useCFScores';
 import { useMyProfile } from '@/hooks/useMyProfile';
 import UserMenu from '@/components/UserMenu';
+import NotificationBell from '@/components/NotificationBell';
 
 const BRAND = '#EF5285';
 
@@ -139,6 +140,7 @@ export default function HomePage() {
             >
               <Mic className="w-3.5 h-3.5" style={{ color: '#555555' }} />
             </Link>
+            <NotificationBell />
             <UserMenu />
           </div>
         </div>
