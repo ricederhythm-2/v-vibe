@@ -37,7 +37,7 @@ export function useNotifications() {
           is_read:    row.is_read,
           created_at: row.created_at,
           post_id:    row.post_id,
-          catch_copy: (row.voice_posts as { catch_copy: string } | null)?.catch_copy ?? null,
+          catch_copy: (row.voice_posts as unknown as { catch_copy: string } | null)?.catch_copy ?? null,
         })),
       );
       setLoading(false);
