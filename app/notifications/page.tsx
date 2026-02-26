@@ -14,9 +14,9 @@ export default function NotificationsPage() {
   const { notifications, loading, markAllRead } = useNotifications();
 
   useEffect(() => {
-    markAllRead();
+    if (!loading) markAllRead();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loading]);
 
   return (
     <div className="min-h-dvh" style={{ background: '#FFFFFF' }}>
