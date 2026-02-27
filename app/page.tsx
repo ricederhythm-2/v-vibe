@@ -28,7 +28,7 @@ export default function HomePage() {
   const cardRef         = useRef<SwipeCardHandle>(null);
 
   const remaining = useMemo(() => {
-    const unseen = vlivers.filter((v) => !seenIds.has(v.id));
+    const unseen = vlivers.filter((v) => !seenIds.has(v.id) && !likedIds.has(v.id));
 
     if (!hasHistory && cfScores.size === 0) {
       return [...unseen].sort((a, b) => Number(b.is_boosted) - Number(a.is_boosted));
