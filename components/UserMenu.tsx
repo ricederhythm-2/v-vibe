@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LogOut, Mic, Pencil, UserPlus } from 'lucide-react';
+import { LogIn, LogOut, Mic, Pencil, UserPlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useMyProfile } from '@/hooks/useMyProfile';
 import type { User } from '@supabase/supabase-js';
@@ -37,7 +37,20 @@ export default function UserMenu() {
     router.refresh();
   };
 
-  if (loading || !user) return null;
+  if (loading) return null;
+
+  if (!user) {
+    return (
+      <Link
+        href="/login"
+        className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all hover:scale-105"
+        style={{ background: BRAND, color: '#FFFFFF', boxShadow: `0 2px 8px ${BRAND}40` }}
+      >
+        <LogIn className="w-3.5 h-3.5" />
+        ログイン
+      </Link>
+    );
+  }
 
   const avatarUrl   = user.user_metadata?.avatar_url as string | undefined;
   const displayName = (user.user_metadata?.full_name as string | undefined)
