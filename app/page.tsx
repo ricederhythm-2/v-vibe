@@ -45,7 +45,7 @@ export default function HomePage() {
       }
       return contentB - contentA;
     });
-  }, [seenIds, weights, hasHistory, cfScores]);
+  }, [seenIds, likedIds, weights, hasHistory, cfScores]);
 
   const current    = remaining[0];
   const next       = remaining[1];
