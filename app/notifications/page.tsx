@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useEffect } from 'react';
 import { Bell, Heart } from 'lucide-react';
-import SubHeader from '@/components/SubHeader';
+import AppHeader from '@/components/AppHeader';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNotifications, type Notification } from '@/hooks/useNotifications';
 
@@ -20,12 +20,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="min-h-dvh" style={{ background: '#FFFFFF' }}>
-      <SubHeader>
-        <div className="flex items-center gap-2">
-          <Bell className="w-4 h-4" style={{ color: BRAND }} />
-          <h1 className="font-black text-base" style={{ color: '#111111' }}>通知</h1>
-        </div>
-      </SubHeader>
+      <AppHeader />
 
       <main className="pt-6">
         {loading ? null : notifications.length === 0 ? (

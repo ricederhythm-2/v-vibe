@@ -4,15 +4,13 @@ export const dynamic = 'force-dynamic';
 
 import { useCallback, useRef, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Heart, RotateCcw, Sparkles, X, UserPlus, Mic } from 'lucide-react';
+import { Heart, RotateCcw, Sparkles, X } from 'lucide-react';
 import SwipeCard, { type SwipeCardHandle } from '@/components/SwipeCard';
 import { useFavorites } from '@/hooks/useFavorites';
 import { usePreferences, scoreVLiver } from '@/hooks/usePreferences';
 import { useVlivers } from '@/hooks/useVlivers';
 import { useCFScores } from '@/hooks/useCFScores';
-import { useMyProfile } from '@/hooks/useMyProfile';
-import UserMenu from '@/components/UserMenu';
-import NotificationBell from '@/components/NotificationBell';
+import AppHeader from '@/components/AppHeader';
 
 const BRAND = '#EF5285';
 
@@ -22,7 +20,6 @@ export default function HomePage() {
   const { weights, recordLike, recordPass, hasHistory } = usePreferences();
   const { vlivers, loading }      = useVlivers();
   const { cfScores, saveAction }  = useCFScores();
-  const { profile: myProfile }    = useMyProfile();
 
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const cardRef         = useRef<SwipeCardHandle>(null);
@@ -100,51 +97,7 @@ export default function HomePage() {
     <div className="h-dvh overflow-hidden flex flex-col" style={{ background: '#FFFFFF' }}>
 
       {/* ヘッダー */}
-      <header className="w-full flex-shrink-0" style={{ borderBottom: '1px solid #F0F0F0' }}>
-        <div className="w-full max-w-[430px] mx-auto flex items-center justify-between px-5 pt-5 pb-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
-            <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
-              V-Vibe
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <Link
-              href="/favorites"
-              className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
-              style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-              aria-label="お気に入り"
-            >
-              <Heart className="w-3.5 h-3.5" style={{ color: BRAND, fill: BRAND }} />
-              <span className="text-xs font-bold" style={{ color: BRAND }}>{likedCount}</span>
-              {likedCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full" style={{ background: BRAND }} />
-              )}
-            </Link>
-            {!myProfile && (
-              <Link
-                href="/register"
-                className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-                style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-                aria-label="Vライバー登録"
-              >
-                <UserPlus className="w-3.5 h-3.5" style={{ color: '#555555' }} />
-              </Link>
-            )}
-            <Link
-              href="/post"
-              className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-              style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-              aria-label="ボイス投稿"
-            >
-              <Mic className="w-3.5 h-3.5" style={{ color: '#555555' }} />
-            </Link>
-            <NotificationBell />
-            <UserMenu />
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       {/* カードエリア */}
       <main className="flex-1 min-h-0 w-full max-w-[430px] mx-auto px-4 pt-4">
