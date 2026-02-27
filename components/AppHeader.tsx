@@ -17,12 +17,12 @@ export default function AppHeader() {
   return (
     <header className="w-full flex-shrink-0" style={{ borderBottom: '1px solid #F0F0F0' }}>
       <div className="w-full max-w-[430px] mx-auto flex items-center justify-between px-5 pt-5 pb-4">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
           <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
           <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
             V-Vibe
           </span>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-1.5">
           <Link
