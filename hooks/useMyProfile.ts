@@ -12,6 +12,7 @@ export interface VliverProfile {
   color: string;
   tags: string[];
   description: string;
+  twitter_handle: string;
 }
 
 /** ログイン中ユーザーの VLiver プロフィールを取得する */

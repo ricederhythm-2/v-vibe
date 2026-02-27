@@ -19,6 +19,7 @@ export const VLIVERS: VLiver[] = [
     tags: ['歌', 'ゲーム', '天然'],
     color: '#FF6B9D',
     is_boosted: true,
+    twitterHandle: '',
   },
   {
     id: 'rei',
@@ -32,6 +33,7 @@ export const VLIVERS: VLiver[] = [
     tags: ['ホラー', '朗読', 'クール'],
     color: '#4A90D9',
     is_boosted: false,
+    twitterHandle: '',
   },
   {
     id: 'midori',
@@ -45,6 +47,7 @@ export const VLIVERS: VLiver[] = [
     tags: ['癒し', 'ASMR', '雑談'],
     color: '#52C788',
     is_boosted: false,
+    twitterHandle: '',
   },
 ];
 

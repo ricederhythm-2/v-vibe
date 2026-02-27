@@ -39,11 +39,13 @@ const MAX_IMAGE_MB = 10;
 
 interface FormState {
   name: string; handle: string; description: string;
+  twitterHandle: string;
   imageFile: File | null; imagePreview: string;
   color: string; tags: string[];
 }
 const INIT: FormState = {
   name: '', handle: '', description: '',
+  twitterHandle: '',
   imageFile: null, imagePreview: '', color: '#FF6B9D', tags: [],
 };
 
@@ -91,6 +93,7 @@ export default function RegisterForm() {
       name: profile.name,
       handle: profile.handle,
       description: profile.description,
+      twitterHandle: profile.twitter_handle ?? '',
       imageFile: null,
       imagePreview: profile.image_path
         ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/vlivers-images/${profile.image_path}`
@@ -149,6 +152,7 @@ export default function RegisterForm() {
         const { error } = await supabase.from('vliver_profiles').update({
           name: form.name, handle: form.handle,
           description: form.description,
+          twitter_handle: form.twitterHandle,
           tags: form.tags, color: form.color, image_path: imagePath,
           updated_at: new Date().toISOString(),
         }).eq('id', profile.id);
@@ -157,6 +161,7 @@ export default function RegisterForm() {
         const { error } = await supabase.from('vliver_profiles').insert({
           owner_id: user.id, name: form.name, handle: form.handle,
           description: form.description,
+          twitter_handle: form.twitterHandle,
           tags: form.tags, color: form.color, image_path: imagePath,
         });
         if (error) throw error;
@@ -243,6 +248,15 @@ export default function RegisterForm() {
               <input type="text" value={form.handle}
                 onChange={(e) => setForm((p) => ({ ...p, handle: e.target.value.replace(/[^a-zA-Z0-9_]/g, '') }))}
                 placeholder="akari_hoshizaki" maxLength={20}
+                className="flex-1 bg-transparent text-[#111111] placeholder-[#AAAAAA] text-sm focus:outline-none" />
+            </div>
+          </Field>
+          <Field label="X（Twitter）ハンドル">
+            <div className={`${inputCls} flex items-center`}>
+              <span className="text-[#AAAAAA] text-sm mr-1">@</span>
+              <input type="text" value={form.twitterHandle}
+                onChange={(e) => setForm((p) => ({ ...p, twitterHandle: e.target.value.replace(/[^a-zA-Z0-9_]/g, '') }))}
+                placeholder="akari_hoshizaki" maxLength={50}
                 className="flex-1 bg-transparent text-[#111111] placeholder-[#AAAAAA] text-sm focus:outline-none" />
             </div>
           </Field>

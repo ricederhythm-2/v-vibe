@@ -3,7 +3,7 @@
 import { useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Zap, HeartCrack, Sparkles, ArrowRight } from 'lucide-react';
+import { Play, Pause, Zap, HeartCrack, Sparkles, ArrowRight, Twitter } from 'lucide-react';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useVlivers } from '@/hooks/useVlivers';
 import type { VLiver } from '@/components/SwipeCard';
@@ -162,6 +162,18 @@ function FavoriteCard({
 
           {/* ボタン行 */}
           <div className="flex items-center gap-2 mt-2.5">
+            {vliver.twitterHandle && (
+              <a
+                href={`https://x.com/${vliver.twitterHandle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-bold transition-all hover:scale-105 active:scale-95"
+                style={{ background: '#000000', color: '#FFFFFF' }}
+                aria-label="Xを見る"
+              >
+                <Twitter className="w-3 h-3" />X
+              </a>
+            )}
             <button
               onClick={onTogglePlay}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all hover:scale-105 active:scale-95"

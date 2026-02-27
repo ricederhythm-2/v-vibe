@@ -33,7 +33,8 @@ export function useVlivers() {
           image_path,
           color,
           tags,
-          description
+          description,
+          twitter_handle
         )
       `)
       .eq('is_published', true)
@@ -53,6 +54,7 @@ export function useVlivers() {
                 id: string; name: string; handle: string;
                 image_path: string | null; color: string;
                 tags: string[]; description: string;
+                twitter_handle: string;
               };
               return {
                 id:          row.id,
@@ -62,9 +64,10 @@ export function useVlivers() {
                 description: p.description,
                 imageUrl:    storageUrl('vlivers-images', p.image_path),
                 voiceUrl:    storageUrl('vlivers-voices', row.voice_path),
-                tags:        p.tags ?? [],
-                color:       p.color,
-                is_boosted:  row.is_boosted,
+                tags:          p.tags ?? [],
+                color:         p.color,
+                is_boosted:    row.is_boosted,
+                twitterHandle: p.twitter_handle ?? '',
               };
             }),
         );

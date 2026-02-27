@@ -30,6 +30,7 @@ export interface VLiver {
   tags: string[];
   color: string;
   is_boosted: boolean;
+  twitterHandle: string;
 }
 
 export interface SwipeCardHandle {
