@@ -7,7 +7,7 @@ export const metadata = { title: 'お気に入り | V-Vibe' };
 export default function FavoritesPage() {
   return (
     <div className="min-h-dvh" style={{ background: '#FFFFFF' }}>
-      <AppHeader />
+      <AppHeader showBack />
       <main className="pt-6"><FavoritesList /></main>
     </div>
   );

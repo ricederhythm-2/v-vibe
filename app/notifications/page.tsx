@@ -20,7 +20,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="min-h-dvh" style={{ background: '#FFFFFF' }}>
-      <AppHeader />
+      <AppHeader showBack />
 
       <main className="pt-6">
         {loading ? null : notifications.length === 0 ? (

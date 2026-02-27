@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles, Heart, UserPlus, Mic } from 'lucide-react';
+import { Sparkles, Heart, UserPlus, Mic, ArrowLeft } from 'lucide-react';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useMyProfile } from '@/hooks/useMyProfile';
 import NotificationBell from '@/components/NotificationBell';
@@ -9,7 +9,7 @@ import UserMenu from '@/components/UserMenu';
 
 const BRAND = '#EF5285';
 
-export default function AppHeader() {
+export default function AppHeader({ showBack = false }: { showBack?: boolean }) {
   const { likedIds }       = useFavorites();
   const { profile }        = useMyProfile();
   const likedCount         = likedIds.size;
@@ -17,12 +17,23 @@ export default function AppHeader() {
   return (
     <header className="w-full flex-shrink-0" style={{ borderBottom: '1px solid #F0F0F0' }}>
       <div className="w-full max-w-[430px] mx-auto flex items-center justify-between px-5 pt-5 pb-4">
-        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
-          <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
-            V-Vibe
-          </span>
-        </Link>
+        {showBack ? (
+          <Link
+            href="/"
+            className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-110 flex-shrink-0"
+            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
+            aria-label="ホームに戻る"
+          >
+            <ArrowLeft className="w-4 h-4" style={{ color: '#555555' }} />
+          </Link>
+        ) : (
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
+            <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
+              V-Vibe
+            </span>
+          </Link>
+        )}
 
         <div className="flex items-center gap-1.5">
           <Link
