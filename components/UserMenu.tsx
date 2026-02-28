@@ -15,10 +15,10 @@ export default function UserMenu() {
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const router   = useRouter();
-  const supabase = createClient();
   const { profile } = useMyProfile();
 
   useEffect(() => {
+    const supabase = createClient();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
@@ -28,6 +28,7 @@ export default function UserMenu() {
   }, []);
 
   const handleSignOut = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
     setMenuOpen(false);
     router.refresh();
