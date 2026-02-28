@@ -65,6 +65,7 @@ export function useVlivers() {
                 color:         p.color,
                 is_boosted:    row.is_boosted,
                 twitterHandle: p.twitter_handle ?? '',
+                platformLinks: (p as any).platform_links ?? {},
               };
             }),
           );

@@ -31,6 +31,7 @@ export interface VLiver {
   color: string;
   is_boosted: boolean;
   twitterHandle: string;
+  platformLinks: Record<string, string>;
 }
 
 export interface SwipeCardHandle {

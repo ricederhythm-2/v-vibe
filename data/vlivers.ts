@@ -20,6 +20,7 @@ export const VLIVERS: VLiver[] = [
     color: '#FF6B9D',
     is_boosted: true,
     twitterHandle: 'akari_hoshizaki',
+    platformLinks: { youtube: 'https://youtube.com/@akari_hoshizaki', twitcasting: 'https://twitcasting.tv/akari_hoshizaki' },
   },
   {
     id: 'rei',
@@ -34,6 +35,7 @@ export const VLIVERS: VLiver[] = [
     color: '#4A90D9',
     is_boosted: false,
     twitterHandle: 'rei_souten',
+    platformLinks: { youtube: 'https://youtube.com/@rei_souten', twitch: 'https://twitch.tv/rei_souten' },
   },
   {
     id: 'midori',
@@ -48,6 +50,7 @@ export const VLIVERS: VLiver[] = [
     color: '#52C788',
     is_boosted: false,
     twitterHandle: 'midori_suiha',
+    platformLinks: { youtube: 'https://youtube.com/@midori_suiha', niconico: 'https://nicovideo.jp/user/midori_suiha' },
   },
 ];
 

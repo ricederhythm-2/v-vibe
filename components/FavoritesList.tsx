@@ -3,7 +3,8 @@
 import { useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Zap, HeartCrack, Sparkles, ArrowRight, Twitter } from 'lucide-react';
+import { Play, Pause, Zap, HeartCrack, Sparkles, ArrowRight, Twitter, ExternalLink } from 'lucide-react';
+import { PLATFORMS } from '@/lib/platforms';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useVlivers } from '@/hooks/useVlivers';
 import type { VLiver } from '@/components/SwipeCard';
@@ -159,6 +160,24 @@ function FavoriteCard({
               ))}
             </div>
           </div>
+
+          {/* プラットフォームリンク */}
+          {Object.keys(vliver.platformLinks ?? {}).length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {PLATFORMS.filter((p) => vliver.platformLinks?.[p.id]).map((p) => (
+                <a
+                  key={p.id}
+                  href={vliver.platformLinks[p.id]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold transition-all hover:scale-105 active:scale-95"
+                  style={{ background: p.bg, color: p.color, border: `1px solid ${p.color}30` }}
+                >
+                  {p.label}
+                </a>
+              ))}
+            </div>
+          )}
 
           {/* ボタン行 */}
           <div className="flex items-center gap-2 mt-2.5">

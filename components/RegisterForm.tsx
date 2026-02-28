@@ -3,7 +3,8 @@
 import { useState, useRef, useCallback, useEffect, type ChangeEvent, type DragEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { PLATFORMS } from '@/lib/platforms';
 import { createClient } from '@/lib/supabase/client';
 import { useMyProfile } from '@/hooks/useMyProfile';
 
@@ -40,12 +41,14 @@ const MAX_IMAGE_MB = 10;
 interface FormState {
   name: string; handle: string; description: string;
   twitterHandle: string;
+  platformLinks: Record<string, string>;
   imageFile: File | null; imagePreview: string;
   color: string; tags: string[];
 }
 const INIT: FormState = {
   name: '', handle: '', description: '',
   twitterHandle: '',
+  platformLinks: {},
   imageFile: null, imagePreview: '', color: '#FF6B9D', tags: [],
 };
 
@@ -77,6 +80,7 @@ export default function RegisterForm() {
   const isEditMode = !!profile;
 
   const [step, setStep]   = useState(0);
+  const [platformOpen, setPlatformOpen] = useState(false);
   const [form, setForm]   = useState<FormState>(INIT);
   const [rights, setRights] = useState<Record<RightId, boolean>>({ own_rights: false, no_third_party: false, terms: false });
   const [imageError, setImageError]   = useState('');
@@ -94,6 +98,7 @@ export default function RegisterForm() {
       handle: profile.handle,
       description: profile.description,
       twitterHandle: profile.twitter_handle ?? '',
+      platformLinks: profile.platform_links ?? {},
       imageFile: null,
       imagePreview: profile.image_path
         ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/vlivers-images/${profile.image_path}`
@@ -153,6 +158,7 @@ export default function RegisterForm() {
           name: form.name, handle: form.handle,
           description: form.description,
           twitter_handle: form.twitterHandle,
+          platform_links: form.platformLinks,
           tags: form.tags, color: form.color, image_path: imagePath,
           updated_at: new Date().toISOString(),
         }).eq('id', profile.id);
@@ -162,6 +168,7 @@ export default function RegisterForm() {
           owner_id: user.id, name: form.name, handle: form.handle,
           description: form.description,
           twitter_handle: form.twitterHandle,
+          platform_links: form.platformLinks,
           tags: form.tags, color: form.color, image_path: imagePath,
         });
         if (error) throw error;
@@ -260,6 +267,48 @@ export default function RegisterForm() {
                 className="flex-1 bg-transparent text-[#111111] placeholder-[#AAAAAA] text-sm focus:outline-none" />
             </div>
           </Field>
+          {/* 配信プラットフォームリンク */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setPlatformOpen((o) => !o)}
+              className="flex items-center justify-between w-full py-2"
+            >
+              <span className={labelCls}>配信プラットフォームリンク <span className="text-[#AAAAAA] font-normal normal-case">（任意）</span></span>
+              {platformOpen
+                ? <ChevronUp className="w-4 h-4 text-[#AAAAAA]" />
+                : <ChevronDown className="w-4 h-4 text-[#AAAAAA]" />}
+            </button>
+            {platformOpen && (
+              <div className="space-y-2 mt-1">
+                {PLATFORMS.map((p) => (
+                  <div key={p.id} className={`${inputCls} flex items-center gap-2 py-2`}>
+                    <span
+                      className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                      style={{ background: p.bg, color: p.color, border: `1px solid ${p.color}30` }}
+                    >
+                      {p.label}
+                    </span>
+                    <input
+                      type="url"
+                      value={form.platformLinks[p.id] ?? ''}
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        setForm((prev) => {
+                          const next = { ...prev.platformLinks };
+                          if (val) next[p.id] = val; else delete next[p.id];
+                          return { ...prev, platformLinks: next };
+                        });
+                      }}
+                      placeholder={p.placeholder}
+                      className="flex-1 bg-transparent text-[#111111] placeholder-[#AAAAAA] text-xs focus:outline-none min-w-0"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <Field label="自己紹介" required counter={{ current: form.description.length, max: 100 }}>
             <textarea value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
               placeholder="ゲーム実況とお歌が得意な天然系VTuber。毎日夜10時から配信中！" rows={3}

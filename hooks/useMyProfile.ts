@@ -13,6 +13,7 @@ export interface VliverProfile {
   tags: string[];
   description: string;
   twitter_handle: string;
+  platform_links: Record<string, string>;
 }
 
 /** ログイン中ユーザーの VLiver プロフィールを取得する */
