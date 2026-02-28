@@ -26,16 +26,7 @@ export function useVlivers() {
         voice_path,
         is_boosted,
         created_at,
-        vliver_profiles (
-          id,
-          name,
-          handle,
-          image_path,
-          color,
-          tags,
-          description,
-          twitter_handle
-        )
+        vliver_profiles (*)
       `)
       .eq('is_published', true)
       .order('is_boosted', { ascending: false })
