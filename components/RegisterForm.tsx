@@ -310,23 +310,12 @@ export default function RegisterForm() {
 
             {/* プラットフォーム追加セレクト */}
             {PLATFORMS.some((p) => !(p.id in form.platformLinks)) && (
-              <div className="relative mt-2">
-                <select
-                  value=""
-                  onChange={(e) => {
-                    const id = e.target.value;
-                    if (!id) return;
-                    setForm((prev) => ({ ...prev, platformLinks: { ...prev.platformLinks, [id]: '' } }));
-                  }}
-                  className="w-full appearance-none bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 pr-10 text-sm text-[#AAAAAA] focus:outline-none focus:border-[#EF5285] transition-colors cursor-pointer"
-                >
-                  <option value="">＋ プラットフォームを追加…</option>
-                  {PLATFORMS.filter((p) => !(p.id in form.platformLinks)).map((p) => (
-                    <option key={p.id} value={p.id}>{p.label}</option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#AAAAAA]" />
-              </div>
+              <PlatformDropdown
+                platforms={PLATFORMS.filter((p) => !(p.id in form.platformLinks))}
+                onSelect={(id) =>
+                  setForm((prev) => ({ ...prev, platformLinks: { ...prev.platformLinks, [id]: '' } }))
+                }
+              />
             )}
           </div>
 
@@ -521,6 +510,59 @@ export default function RegisterForm() {
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+function PlatformDropdown({
+  platforms,
+  onSelect,
+}: {
+  platforms: typeof PLATFORMS;
+  onSelect: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative mt-2">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center justify-between bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 text-sm text-[#AAAAAA] focus:outline-none focus:border-[#EF5285] transition-colors"
+      >
+        <span>＋ プラットフォームを追加…</span>
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-white border border-[#E8E8E8] rounded-xl shadow-lg overflow-hidden">
+          {platforms.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => { onSelect(p.id); setOpen(false); }}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left hover:bg-[#F9F9F9] transition-colors"
+            >
+              <span
+                className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                style={{ background: p.bg, color: p.color, border: `1px solid ${p.color}30` }}
+              >
+                {p.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
