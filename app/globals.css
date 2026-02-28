@@ -20,7 +20,7 @@
 }
 
 html {
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: auto;
 }
 
 body {
@@ -30,7 +30,7 @@ body {
   /* タップ時のブラウザハイライトを除去 */
   -webkit-tap-highlight-color: transparent;
   /* プルダウンリフレッシュ防止 */
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: auto;
   /* iOS ホームインジケーター対応 */
   padding-bottom: env(safe-area-inset-bottom);
 }
