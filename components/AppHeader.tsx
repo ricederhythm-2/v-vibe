@@ -15,7 +15,7 @@ export default function AppHeader({ showBack = false }: { showBack?: boolean }) 
   const likedCount         = likedIds.size;
 
   return (
-    <header className="w-full flex-shrink-0" style={{ borderBottom: '1px solid #F0F0F0' }}>
+    <header className="w-full flex-shrink-0 sticky top-0 z-40 bg-white" style={{ borderBottom: '1px solid #F0F0F0' }}>
       <div className="w-full max-w-[430px] mx-auto flex items-center justify-between px-5 pt-5 pb-4">
         {showBack ? (
           <Link
