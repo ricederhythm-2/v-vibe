@@ -13,9 +13,8 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const next  = searchParams.get('next') ?? '/';
   const error = searchParams.get('error');
-  const supabase = createClient();
-
   const handleSignIn = async () => {
+    const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: 'x',
       options: {
