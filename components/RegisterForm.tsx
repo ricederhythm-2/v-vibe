@@ -300,9 +300,9 @@ export default function RegisterForm() {
                         return { ...prev, platformLinks: next };
                       })
                     }
-                    className="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full hover:bg-[#F0F0F0]"
+                    className="flex-shrink-0 flex items-center justify-center rounded-full hover:bg-[#F0F0F0] p-0.5"
                   >
-                    <X className="w-3 h-3 text-[#AAAAAA]" />
+                    <X className="w-4 h-4 text-[#AAAAAA]" />
                   </button>
                 </div>
               ))}
