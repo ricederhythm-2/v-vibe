@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect, type ChangeEvent, type DragEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle } from 'lucide-react';
 import { PLATFORMS } from '@/lib/platforms';
 import { createClient } from '@/lib/supabase/client';
 import { useMyProfile } from '@/hooks/useMyProfile';
@@ -80,7 +80,6 @@ export default function RegisterForm() {
   const isEditMode = !!profile;
 
   const [step, setStep]   = useState(0);
-  const [platformOpen, setPlatformOpen] = useState(false);
   const [form, setForm]   = useState<FormState>(INIT);
   const [rights, setRights] = useState<Record<RightId, boolean>>({ own_rights: false, no_third_party: false, terms: false });
   const [imageError, setImageError]   = useState('');
@@ -269,43 +268,62 @@ export default function RegisterForm() {
           </Field>
           {/* 配信プラットフォームリンク */}
           <div>
-            <button
-              type="button"
-              onClick={() => setPlatformOpen((o) => !o)}
-              className="flex items-center justify-between w-full py-2"
-            >
-              <span className={labelCls}>配信プラットフォームリンク <span className="text-[#AAAAAA] font-normal normal-case">（任意）</span></span>
-              {platformOpen
-                ? <ChevronUp className="w-4 h-4 text-[#AAAAAA]" />
-                : <ChevronDown className="w-4 h-4 text-[#AAAAAA]" />}
-            </button>
-            {platformOpen && (
-              <div className="space-y-2 mt-1">
-                {PLATFORMS.map((p) => (
-                  <div key={p.id} className={`${inputCls} flex items-center gap-2 py-2`}>
-                    <span
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-                      style={{ background: p.bg, color: p.color, border: `1px solid ${p.color}30` }}
-                    >
-                      {p.label}
-                    </span>
-                    <input
-                      type="url"
-                      value={form.platformLinks[p.id] ?? ''}
-                      onChange={(e) => {
-                        const val = e.target.value.trim();
-                        setForm((prev) => {
-                          const next = { ...prev.platformLinks };
-                          if (val) next[p.id] = val; else delete next[p.id];
-                          return { ...prev, platformLinks: next };
-                        });
-                      }}
-                      placeholder={p.placeholder}
-                      className="flex-1 bg-transparent text-[#111111] placeholder-[#AAAAAA] text-xs focus:outline-none min-w-0"
-                    />
-                  </div>
+            <label className={labelCls}>
+              配信プラットフォームリンク <span className="text-[#AAAAAA] font-normal normal-case">（任意）</span>
+            </label>
+
+            {/* 追加済みプラットフォーム */}
+            <div className="space-y-2 mt-2">
+              {PLATFORMS.filter((p) => p.id in form.platformLinks).map((p) => (
+                <div key={p.id} className={`${inputCls} flex items-center gap-2 py-2`}>
+                  <span
+                    className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                    style={{ background: p.bg, color: p.color, border: `1px solid ${p.color}30` }}
+                  >
+                    {p.label}
+                  </span>
+                  <input
+                    type="url"
+                    value={form.platformLinks[p.id]}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, platformLinks: { ...prev.platformLinks, [p.id]: e.target.value } }))
+                    }
+                    placeholder={p.placeholder}
+                    className="flex-1 bg-transparent text-[#111111] placeholder-[#AAAAAA] text-xs focus:outline-none min-w-0"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setForm((prev) => {
+                        const next = { ...prev.platformLinks };
+                        delete next[p.id];
+                        return { ...prev, platformLinks: next };
+                      })
+                    }
+                    className="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full hover:bg-[#F0F0F0]"
+                  >
+                    <X className="w-3 h-3 text-[#AAAAAA]" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* プラットフォーム追加セレクト */}
+            {PLATFORMS.some((p) => !(p.id in form.platformLinks)) && (
+              <select
+                value=""
+                onChange={(e) => {
+                  const id = e.target.value;
+                  if (!id) return;
+                  setForm((prev) => ({ ...prev, platformLinks: { ...prev.platformLinks, [id]: '' } }));
+                }}
+                className="mt-2 w-full bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 text-sm text-[#AAAAAA] focus:outline-none focus:border-[#EF5285] transition-colors"
+              >
+                <option value="">＋ プラットフォームを追加…</option>
+                {PLATFORMS.filter((p) => !(p.id in form.platformLinks)).map((p) => (
+                  <option key={p.id} value={p.id}>{p.label}</option>
                 ))}
-              </div>
+              </select>
             )}
           </div>
 
