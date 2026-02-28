@@ -19,8 +19,29 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 body {
   background: var(--vv-bg);
   color: var(--vv-t1);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  /* タップ時のブラウザハイライトを除去 */
+  -webkit-tap-highlight-color: transparent;
+  /* プルダウンリフレッシュ防止 */
+  overscroll-behavior: none;
+  /* iOS ホームインジケーター対応 */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* スクロールエリアの慣性スクロール */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* テキスト選択をUIパーツで無効化 */
+button, a {
+  user-select: none;
+  -webkit-user-select: none;
 }
