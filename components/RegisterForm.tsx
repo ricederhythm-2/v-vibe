@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect, type ChangeEvent, type DragEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Upload, X, Check, AlertCircle, ChevronDown } from 'lucide-react';
 import { PLATFORMS } from '@/lib/platforms';
 import { createClient } from '@/lib/supabase/client';
 import { useMyProfile } from '@/hooks/useMyProfile';
@@ -310,20 +310,23 @@ export default function RegisterForm() {
 
             {/* プラットフォーム追加セレクト */}
             {PLATFORMS.some((p) => !(p.id in form.platformLinks)) && (
-              <select
-                value=""
-                onChange={(e) => {
-                  const id = e.target.value;
-                  if (!id) return;
-                  setForm((prev) => ({ ...prev, platformLinks: { ...prev.platformLinks, [id]: '' } }));
-                }}
-                className="mt-2 w-full bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 text-sm text-[#AAAAAA] focus:outline-none focus:border-[#EF5285] transition-colors"
-              >
-                <option value="">＋ プラットフォームを追加…</option>
-                {PLATFORMS.filter((p) => !(p.id in form.platformLinks)).map((p) => (
-                  <option key={p.id} value={p.id}>{p.label}</option>
-                ))}
-              </select>
+              <div className="relative mt-2">
+                <select
+                  value=""
+                  onChange={(e) => {
+                    const id = e.target.value;
+                    if (!id) return;
+                    setForm((prev) => ({ ...prev, platformLinks: { ...prev.platformLinks, [id]: '' } }));
+                  }}
+                  className="w-full appearance-none bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 pr-10 text-sm text-[#AAAAAA] focus:outline-none focus:border-[#EF5285] transition-colors cursor-pointer"
+                >
+                  <option value="">＋ プラットフォームを追加…</option>
+                  {PLATFORMS.filter((p) => !(p.id in form.platformLinks)).map((p) => (
+                    <option key={p.id} value={p.id}>{p.label}</option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#AAAAAA]" />
+              </div>
             )}
           </div>
 
