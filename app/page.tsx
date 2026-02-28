@@ -94,7 +94,7 @@ export default function HomePage() {
   }, [stopCurrentAudio]);
 
   return (
-    <div className="h-dvh overflow-hidden flex flex-col" style={{ background: '#FFFFFF' }}>
+    <div className="h-dvh overflow-hidden flex flex-col" style={{ background: '#FFFFFF', overscrollBehavior: 'none' }}>
 
       {/* ヘッダー */}
       <AppHeader />
