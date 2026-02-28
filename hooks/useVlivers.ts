@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { VLiver } from '@/components/SwipeCard';
+import { VLIVERS } from '@/data/vlivers';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
@@ -37,9 +38,14 @@ export function useVlivers() {
           setLoading(false);
           return;
         }
+        const rows = (data ?? []).filter((row) => row.vliver_profiles);
+        if (rows.length === 0) {
+          setVlivers(VLIVERS);
+          setLoading(false);
+          return;
+        }
         setVlivers(
-          (data ?? [])
-            .filter((row) => row.vliver_profiles)
+          rows
             .map((row) => {
               const p = row.vliver_profiles as unknown as {
                 id: string; name: string; handle: string;
@@ -61,7 +67,7 @@ export function useVlivers() {
                 twitterHandle: p.twitter_handle ?? '',
               };
             }),
-        );
+          );
         setLoading(false);
       });
   }, []);
