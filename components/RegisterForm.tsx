@@ -32,7 +32,7 @@ const PRESET_TAGS = [
 const RIGHTS_ITEMS = [
   { id: 'own_rights'    as const, text: 'アップロードする画像の著作権・肖像権が、自分または所属事務所に帰属していることを確認しました' },
   { id: 'no_third_party' as const, text: '第三者が権利を保有する素材（版権キャラクター等）を無断で使用していません' },
-  { id: 'terms'         as const, text: 'V-Vibe 利用規約およびコンテンツガイドラインに同意します' },
+  { id: 'terms'         as const, text: 'OshiVox 利用規約およびコンテンツガイドラインに同意します' },
 ] as const;
 type RightId = typeof RIGHTS_ITEMS[number]['id'];
 

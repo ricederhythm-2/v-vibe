@@ -2,7 +2,7 @@ import FavoritesList from '@/components/FavoritesList';
 import AppHeader from '@/components/AppHeader';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'お気に入り | V-Vibe' };
+export const metadata = { title: 'お気に入り | OshiVox' };
 
 export default function FavoritesPage() {
   return (

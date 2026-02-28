@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
-const STORAGE_KEY = 'v-vibe-favorites';
+const STORAGE_KEY = 'oshivox-favorites';
 
 /**
  * お気に入りの Vライバー ID を localStorage に永続化する hook。

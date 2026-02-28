@@ -39,7 +39,7 @@ function LoginForm() {
             <Sparkles className="w-7 h-7" style={{ color: BRAND }} />
           </div>
           <span className="font-black text-2xl tracking-tight" style={{ color: '#111111' }}>
-            V-Vibe
+            OshiVox
           </span>
           <p className="text-xs text-center" style={{ color: '#AAAAAA' }}>
             X アカウントでかんたんにはじめよう

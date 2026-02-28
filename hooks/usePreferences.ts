@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-const KEY = 'v-vibe-prefs';
+const KEY = 'oshivox-prefs';
 
 export interface TagWeights {
   [tag: string]: number;

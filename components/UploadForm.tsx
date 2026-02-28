@@ -59,7 +59,7 @@ const RIGHTS_ITEMS = [
   },
   {
     id: 'terms' as const,
-    text: 'V-Vibe 利用規約およびコンテンツガイドライン（配信禁止コンテンツ含む）に同意します',
+    text: 'OshiVox 利用規約およびコンテンツガイドライン（配信禁止コンテンツ含む）に同意します',
   },
 ] as const;
 

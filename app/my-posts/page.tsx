@@ -2,7 +2,7 @@ import AppHeader from '@/components/AppHeader';
 import MyPostsList from '@/components/MyPostsList';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: '投稿管理 | V-Vibe' };
+export const metadata = { title: '投稿管理 | OshiVox' };
 
 export default function MyPostsPage() {
   return (

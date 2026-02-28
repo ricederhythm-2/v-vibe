@@ -30,7 +30,7 @@ export default function AppHeader({ showBack = false }: { showBack?: boolean }) 
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
             <Sparkles className="w-5 h-5" style={{ color: BRAND }} />
             <span className="font-black text-xl tracking-tight" style={{ color: '#111111' }}>
-              V-Vibe
+              OshiVox
             </span>
           </Link>
         )}

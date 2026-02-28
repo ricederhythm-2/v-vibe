@@ -22,7 +22,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "V-Vibe — 運命の声に出会う場所",
+  title: "OshiVox — 運命の声に出会う場所",
   description: "3秒聴いて、スワイプ。Vライバー・VTuberのファンマッチングアプリ。",
 };
 

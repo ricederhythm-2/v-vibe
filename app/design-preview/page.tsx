@@ -38,7 +38,7 @@ export default function DesignPreviewPage() {
           <div style={{ width: 8, height: 20, borderRadius: 4, background: C.brand }} />
           <div>
             <p style={{ margin: 0, fontSize: 10, color: C.t3, letterSpacing: 1 }}>DESIGN PREVIEW</p>
-            <h1 style={{ margin: 0, fontSize: 16, fontWeight: 900, color: C.t1 }}>V-Vibe — ライト & フラット</h1>
+            <h1 style={{ margin: 0, fontSize: 16, fontWeight: 900, color: C.t1 }}>OshiVox — ライト & フラット</h1>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function DesignPreviewPage() {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Sparkles size={18} color={C.brand} />
-              <span style={{ fontWeight: 900, fontSize: 18, color: C.t1, letterSpacing: '-0.5px' }}>V-Vibe</span>
+              <span style={{ fontWeight: 900, fontSize: 18, color: C.t1, letterSpacing: '-0.5px' }}>OshiVox</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <GhostBtn>

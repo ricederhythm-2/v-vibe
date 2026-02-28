@@ -12,7 +12,7 @@ const BRAND = '#EF5285';
 const RIGHTS_ITEMS = [
   { id: 'own_voice'   as const, text: 'アップロードする音声の著作権が、自分または所属事務所に帰属していることを確認しました' },
   { id: 'no_bgm'     as const, text: '無断使用の BGM・SE・第三者の声を含んでいません' },
-  { id: 'terms'      as const, text: 'V-Vibe 利用規約およびコンテンツガイドラインに同意します' },
+  { id: 'terms'      as const, text: 'OshiVox 利用規約およびコンテンツガイドラインに同意します' },
 ] as const;
 type RightId = typeof RIGHTS_ITEMS[number]['id'];
 

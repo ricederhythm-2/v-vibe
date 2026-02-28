@@ -2,7 +2,7 @@ import AppHeader from '@/components/AppHeader';
 import RegisterForm from '@/components/RegisterForm';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Vライバー登録 | V-Vibe' };
+export const metadata = { title: 'Vライバー登録 | OshiVox' };
 
 export default function RegisterPage() {
   return (
