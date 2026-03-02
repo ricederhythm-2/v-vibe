@@ -16,10 +16,12 @@ export function useFavorites() {
   const [ids, setIds]           = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const userIdRef               = useRef<string | null>(null);
-  const supabase                = useRef(createClient()).current;
+  const supabaseRef             = useRef<ReturnType<typeof createClient> | null>(null);
 
   // ログイン中ユーザーIDを取得
   useEffect(() => {
+    const supabase = createClient();
+    supabaseRef.current = supabase;
     supabase.auth.getUser().then(({ data }) => {
       userIdRef.current = data.user?.id ?? null;
     });
@@ -27,7 +29,7 @@ export function useFavorites() {
       userIdRef.current = session?.user?.id ?? null;
     });
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, []);
 
   // ── マウント後に localStorage から復元 ──
   useEffect(() => {
@@ -49,22 +51,24 @@ export function useFavorites() {
   const addFavorite = useCallback((id: string) => {
     setIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
     const userId = userIdRef.current;
-    if (userId) {
+    const supabase = supabaseRef.current;
+    if (userId && supabase) {
       supabase.from('favorites').upsert({ user_id: userId, post_id: id }).then(({ error }) => {
         if (error) console.error('favorites insert:', error);
       });
     }
-  }, [supabase]);
+  }, []);
 
   const removeFavorite = useCallback((id: string) => {
     setIds((prev) => prev.filter((i) => i !== id));
     const userId = userIdRef.current;
-    if (userId) {
+    const supabase = supabaseRef.current;
+    if (userId && supabase) {
       supabase.from('favorites').delete().eq('user_id', userId).eq('post_id', id).then(({ error }) => {
         if (error) console.error('favorites delete:', error);
       });
     }
-  }, [supabase]);
+  }, []);
 
   return {
     likedIds: new Set(ids),   // スワイプ画面: O(1) has() 検索

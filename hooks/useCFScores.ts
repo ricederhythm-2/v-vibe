@@ -24,10 +24,12 @@ export type CFScoreMap = Map<string, number>;
 export function useCFScores() {
   const [cfScores, setCFScores] = useState<CFScoreMap>(new Map());
   const userIdRef               = useRef<string | null>(null);
-  // createClient は1回だけ呼ぶ
-  const supabase                = useRef(createClient()).current;
+  const supabaseRef             = useRef<ReturnType<typeof createClient> | null>(null);
 
   useEffect(() => {
+    const supabase = createClient();
+    supabaseRef.current = supabase;
+
     // 初期ユーザー取得
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
@@ -50,7 +52,7 @@ export function useCFScores() {
     );
 
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, []);
 
   /**
    * スワイプ結果を swipe_events テーブルに保存する。
@@ -59,7 +61,8 @@ export function useCFScores() {
   const saveAction = useCallback(
     async (postId: string, action: 'like' | 'pass') => {
       const userId = userIdRef.current;
-      if (!userId) return;
+      const supabase = supabaseRef.current;
+      if (!userId || !supabase) return;
 
       const { error } = await supabase
         .from('swipe_events')
@@ -73,7 +76,7 @@ export function useCFScores() {
         console.error('saveAction:', error);
       }
     },
-    [supabase],
+    [],
   );
 
   return { cfScores, saveAction };
