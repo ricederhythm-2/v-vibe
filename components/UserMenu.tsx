@@ -94,12 +94,12 @@ export default function UserMenu() {
               {xHandle && <p className="text-xs truncate mt-0.5" style={{ color: '#AAAAAA' }}>@{xHandle}</p>}
             </div>
 
-            <div className="pb-2">
+            <div className="pb-3">
               {profile && (
                 <Link
                   href="/my-posts"
                   onClick={() => setMenuOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-4 pt-2 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
+                  className="w-full flex items-center gap-2.5 px-4 pt-3 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
                   style={{ color: '#555555' }}
                 >
                   <Mic className="w-3.5 h-3.5" />
@@ -109,18 +109,18 @@ export default function UserMenu() {
               <Link
                 href="/register"
                 onClick={() => setMenuOpen(false)}
-                className="w-full flex items-center gap-2.5 px-4 pt-2 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
+                className="w-full flex items-center gap-2.5 px-4 pt-3 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
                 style={{ color: '#555555' }}
               >
                 {profile ? <Pencil className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
                 {profile ? 'プロフィール編集' : 'Vライバー登録'}
               </Link>
             </div>
-            <div className="pb-2" style={{ borderTop: '1px solid #F0F0F0' }}>
+            <div className="pb-3" style={{ borderTop: '1px solid #F0F0F0' }}>
               <Link
                 href="/terms"
                 onClick={() => setMenuOpen(false)}
-                className="w-full flex items-center gap-2.5 px-4 pt-2 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
+                className="w-full flex items-center gap-2.5 px-4 pt-3 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
                 style={{ color: '#AAAAAA' }}
               >
                 <ScrollText className="w-3.5 h-3.5" />
@@ -129,7 +129,7 @@ export default function UserMenu() {
               <Link
                 href="/guidelines"
                 onClick={() => setMenuOpen(false)}
-                className="w-full flex items-center gap-2.5 px-4 pt-2 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
+                className="w-full flex items-center gap-2.5 px-4 pt-3 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
                 style={{ color: '#AAAAAA' }}
               >
                 <ScrollText className="w-3.5 h-3.5" />
@@ -138,7 +138,7 @@ export default function UserMenu() {
               <Link
                 href="/privacy"
                 onClick={() => setMenuOpen(false)}
-                className="w-full flex items-center gap-2.5 px-4 pt-2 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
+                className="w-full flex items-center gap-2.5 px-4 pt-3 pb-0 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
                 style={{ color: '#AAAAAA' }}
               >
                 <ScrollText className="w-3.5 h-3.5" />
@@ -147,7 +147,7 @@ export default function UserMenu() {
             </div>
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center gap-2.5 px-4 py-2 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
+              className="w-full flex items-center gap-2.5 px-4 py-3 text-xs whitespace-nowrap transition-all hover:bg-gray-50"
               style={{ color: '#555555', borderTop: '1px solid #F0F0F0' }}
             >
               <LogOut className="w-3.5 h-3.5" />
