@@ -56,7 +56,7 @@ export default function FavoritesList() {
     [playingId, removeFavorite],
   );
 
-  if (!hydrated || vliversLoading) return null;
+  if (!hydrated || vliversLoading) return <FavoritesListSkeleton />;
   if (favorites.length === 0) return <EmptyState />;
 
   return (
@@ -240,6 +240,41 @@ function FavoriteCard({
         </div>
       </div>
     </motion.div>
+  );
+}
+
+function FavoritesListSkeleton() {
+  return (
+    <div className="w-full max-w-[430px] mx-auto px-4 pt-4 pb-12">
+      <div className="h-4 w-24 rounded-full mb-2 ml-auto animate-pulse" style={{ background: '#F0F0F0' }} />
+      {[...Array(4)].map((_, i) => (
+        <div
+          key={i}
+          className="mb-3 flex rounded-2xl overflow-hidden animate-pulse"
+          style={{ background: '#FFFFFF', border: '1px solid #E8E8E8', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+        >
+          {/* 左アクセントライン */}
+          <div style={{ width: 3, flexShrink: 0, background: '#F0F0F0' }} />
+          {/* 画像エリア */}
+          <div className="w-24 flex-shrink-0" style={{ background: '#F5F5F5', minHeight: 140 }} />
+          {/* 情報エリア */}
+          <div className="flex-1 px-3 py-3 flex flex-col gap-2">
+            <div className="h-4 w-28 rounded-full" style={{ background: '#F0F0F0' }} />
+            <div className="h-3 w-20 rounded-full" style={{ background: '#F5F5F5' }} />
+            <div className="h-3 w-full rounded-full" style={{ background: '#F5F5F5' }} />
+            <div className="h-3 w-3/4 rounded-full" style={{ background: '#F5F5F5' }} />
+            <div className="flex gap-1 mt-1">
+              <div className="h-4 w-12 rounded-full" style={{ background: '#F0F0F0' }} />
+              <div className="h-4 w-12 rounded-full" style={{ background: '#F0F0F0' }} />
+            </div>
+            <div className="flex gap-2 mt-auto pt-1">
+              <div className="h-6 w-16 rounded-full" style={{ background: '#F0F0F0' }} />
+              <div className="h-6 w-12 rounded-full" style={{ background: '#F0F0F0' }} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
