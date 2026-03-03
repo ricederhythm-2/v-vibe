@@ -103,151 +103,157 @@ function VliverGroupCard({
       className="mb-3"
     >
       <div
-        className="flex rounded-2xl overflow-hidden"
+        className="rounded-2xl overflow-hidden"
         style={{
           background: '#FFFFFF',
           border: '1px solid #E8E8E8',
           boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
         }}
       >
-        {/* 左アクセントライン */}
-        <div style={{ width: 3, flexShrink: 0, background: BRAND }} />
+        {/* 上部：画像 + プロフィール情報（固定高さ） */}
+        <div className="flex">
+          <div style={{ width: 3, flexShrink: 0, background: BRAND }} />
 
-        {/* キャラクター画像 */}
-        <div className="w-24 flex-shrink-0 relative" style={{ background: '#FFF5F8' }}>
-          <img
-            src={profile.imageUrl || undefined}
-            alt={profile.name}
-            className="absolute inset-0 w-full h-full object-cover object-top"
-            draggable={false}
-          />
-        </div>
+          {/* キャラクター画像（固定高さ） */}
+          <div className="w-20 h-28 flex-shrink-0 relative" style={{ background: '#FFF5F8' }}>
+            <img
+              src={profile.imageUrl || undefined}
+              alt={profile.name}
+              className="absolute inset-0 w-full h-full object-cover object-top"
+              draggable={false}
+            />
+          </div>
 
-        {/* 右エリア */}
-        <div className="flex-1 px-3 py-3 flex flex-col min-w-0">
           {/* プロフィール情報 */}
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <h3 className="font-black text-[15px] leading-tight truncate flex-1" style={{ color: '#111111' }}>
-              {profile.name}
-            </h3>
-            {voices.some((v) => v.is_boosted) && (
-              <span
-                className="flex items-center gap-0.5 text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0"
-                style={{ background: BOOST, color: '#7A5F00' }}
-              >
-                <Zap className="w-2 h-2" style={{ fill: '#7A5F00', color: '#7A5F00' }} />
-                BOOST
-              </span>
+          <div className="flex-1 px-3 py-2.5 flex flex-col justify-between min-w-0">
+            <div>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <h3 className="font-black text-[15px] leading-tight truncate flex-1" style={{ color: '#111111' }}>
+                  {profile.name}
+                </h3>
+                {voices.some((v) => v.is_boosted) && (
+                  <span
+                    className="flex items-center gap-0.5 text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0"
+                    style={{ background: BOOST, color: '#7A5F00' }}
+                  >
+                    <Zap className="w-2 h-2" style={{ fill: '#7A5F00', color: '#7A5F00' }} />
+                    BOOST
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] font-mono truncate mb-1.5" style={{ color: '#AAAAAA' }}>
+                {profile.handle}
+              </p>
+              <div className="flex flex-wrap gap-1">
+                {profile.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                    style={{ background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* プラットフォームリンク */}
+            {(profile.twitterHandle || Object.keys(profile.platformLinks ?? {}).length > 0) && (
+              <div className="flex flex-wrap gap-1 mt-1.5">
+                {profile.twitterHandle && (
+                  <a
+                    href={`https://x.com/${profile.twitterHandle}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all hover:scale-105 active:scale-95"
+                    style={{ background: '#000000', color: '#FFFFFF' }}
+                    aria-label="Xを見る"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.258 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  </a>
+                )}
+                {PLATFORMS.filter((p) => profile.platformLinks?.[p.id]).map((p) => (
+                  <a
+                    key={p.id}
+                    href={profile.platformLinks[p.id]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold transition-all hover:scale-105 active:scale-95"
+                    style={{ background: p.bg, color: p.color, border: `1px solid ${p.color}30` }}
+                  >
+                    {p.label}
+                  </a>
+                ))}
+              </div>
             )}
           </div>
-          <p className="text-[11px] font-mono truncate mb-2" style={{ color: '#AAAAAA' }}>
-            {profile.handle}
-          </p>
-          <div className="flex flex-wrap gap-1 mb-3">
-            {profile.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                style={{ background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }}
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
+        </div>
 
-          {/* ボイスリスト */}
-          <div className="space-y-1.5">
-            <AnimatePresence initial={false}>
-              {voices.map((v) => (
-                <motion.div
-                  key={v.id}
-                  layout
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
-                  transition={{ duration: 0.2 }}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-xl"
-                  style={{ background: '#F9F9F9' }}
-                >
-                  <p className="flex-1 text-xs truncate" style={{ color: '#555555' }}>
+        {/* 下部：ボイスリスト（全幅） */}
+        <div style={{ borderTop: '1px solid #F0F0F0' }}>
+          <AnimatePresence initial={false}>
+            {voices.map((v) => (
+              <motion.div
+                key={v.id}
+                layout
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                transition={{ duration: 0.2 }}
+                style={{ borderBottom: '1px solid #F8F8F8' }}
+              >
+                <div className="px-4 py-2.5">
+                  <p className="text-xs leading-snug line-clamp-2 mb-2" style={{ color: '#555555' }}>
                     「{v.catchphrase}」
                   </p>
-                  <button
-                    onClick={() => onTogglePlay(v)}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold flex-shrink-0 transition-all hover:scale-105 active:scale-95"
-                    style={
-                      playingId === v.id
-                        ? { background: BRAND, color: '#fff', boxShadow: `0 2px 8px ${BRAND}40` }
-                        : { background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }
-                    }
-                  >
-                    {playingId === v.id ? (
-                      <>
-                        <Pause className="w-2.5 h-2.5 fill-current" />
-                        停止
-                        <span className="flex items-end gap-[2px] h-3">
-                          {[0, 0.15, 0.3].map((delay) => (
-                            <motion.span
-                              key={delay}
-                              className="w-[2px] rounded-full bg-white"
-                              animate={{ height: ['4px', '10px', '4px'] }}
-                              transition={{ duration: 0.6, repeat: Infinity, delay, ease: 'easeInOut' }}
-                            />
-                          ))}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <Play className="w-2.5 h-2.5 fill-current" />
-                        試聴
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => onRemove(v.id)}
-                    className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold flex-shrink-0 transition-all active:scale-95 hover:scale-105"
-                    style={{ color: '#AAAAAA', border: '1px solid #E8E8E8', background: '#FFFFFF' }}
-                    aria-label="お気に入りから外す"
-                  >
-                    <HeartCrack className="w-2.5 h-2.5" />
-                    外す
-                  </button>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-
-          {/* プラットフォームリンク */}
-          {(profile.twitterHandle || Object.keys(profile.platformLinks ?? {}).length > 0) && (
-            <div className="flex flex-wrap gap-1 mt-2.5">
-              {profile.twitterHandle && (
-                <a
-                  href={`https://x.com/${profile.twitterHandle}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-bold transition-all hover:scale-105 active:scale-95"
-                  style={{ background: '#000000', color: '#FFFFFF' }}
-                  aria-label="Xを見る"
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.258 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </a>
-              )}
-              {PLATFORMS.filter((p) => profile.platformLinks?.[p.id]).map((p) => (
-                <a
-                  key={p.id}
-                  href={profile.platformLinks[p.id]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold transition-all hover:scale-105 active:scale-95"
-                  style={{ background: p.bg, color: p.color, border: `1px solid ${p.color}30` }}
-                >
-                  {p.label}
-                </a>
-              ))}
-            </div>
-          )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => onTogglePlay(v)}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold flex-shrink-0 transition-all hover:scale-105 active:scale-95"
+                      style={
+                        playingId === v.id
+                          ? { background: BRAND, color: '#fff', boxShadow: `0 2px 8px ${BRAND}40` }
+                          : { background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }
+                      }
+                    >
+                      {playingId === v.id ? (
+                        <>
+                          <Pause className="w-2.5 h-2.5 fill-current" />
+                          停止
+                          <span className="flex items-end gap-[2px] h-3">
+                            {[0, 0.15, 0.3].map((delay) => (
+                              <motion.span
+                                key={delay}
+                                className="w-[2px] rounded-full bg-white"
+                                animate={{ height: ['4px', '10px', '4px'] }}
+                                transition={{ duration: 0.6, repeat: Infinity, delay, ease: 'easeInOut' }}
+                              />
+                            ))}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-2.5 h-2.5 fill-current" />
+                          試聴
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => onRemove(v.id)}
+                      className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold flex-shrink-0 transition-all active:scale-95 hover:scale-105"
+                      style={{ color: '#AAAAAA', border: '1px solid #E8E8E8', background: '#FFFFFF' }}
+                      aria-label="お気に入りから外す"
+                    >
+                      <HeartCrack className="w-2.5 h-2.5" />
+                      外す
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </motion.div>
