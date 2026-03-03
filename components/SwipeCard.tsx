@@ -9,12 +9,14 @@ import {
 } from 'react';
 import {
   motion,
+  AnimatePresence,
   useMotionValue,
   useTransform,
   animate,
   type PanInfo,
 } from 'framer-motion';
-import { Play, Pause, Zap } from 'lucide-react';
+import { Play, Pause, Zap, Flag } from 'lucide-react';
+import ReportModal from '@/components/ReportModal';
 
 const BRAND  = '#EF5285';
 const BOOST  = '#FEEE7D';
@@ -49,7 +51,8 @@ const SWIPE_THRESHOLD = 100;
 
 const SwipeCard = forwardRef<SwipeCardHandle, Props>(
   ({ vliver, onSwipe, onAudioPlay, recommendBadge }, ref) => {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying]   = useState(false);
+    const [reportOpen, setReportOpen] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
 
     const x           = useMotionValue(0);
@@ -105,6 +108,16 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
 
     return (
       <>
+        <AnimatePresence>
+          {reportOpen && (
+            <ReportModal
+              vliverId={vliver.id}
+              vliverName={vliver.name}
+              onClose={() => setReportOpen(false)}
+            />
+          )}
+        </AnimatePresence>
+
         <audio
           ref={audioRef}
           src={vliver.voiceUrl || undefined}
@@ -208,12 +221,24 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
               className="flex-shrink-0 px-5 pt-4 pb-4"
               style={{ borderTop: '1px solid #F0F0F0' }}
             >
-              {recommendBadge && (
-                <div className="mb-2">{recommendBadge}</div>
-              )}
-              <h2 className="font-black text-[20px] tracking-tight leading-tight" style={{ color: '#111111' }}>
-                {vliver.name}
-              </h2>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  {recommendBadge && (
+                    <div className="mb-2">{recommendBadge}</div>
+                  )}
+                  <h2 className="font-black text-[20px] tracking-tight leading-tight" style={{ color: '#111111' }}>
+                    {vliver.name}
+                  </h2>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setReportOpen(true); }}
+                  className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 transition-all hover:scale-110 active:scale-95"
+                  style={{ background: '#F5F5F5' }}
+                  aria-label="通報する"
+                >
+                  <Flag className="w-3.5 h-3.5" style={{ color: '#AAAAAA' }} />
+                </button>
+              </div>
               <p className="text-xs font-mono mt-0.5" style={{ color: '#AAAAAA' }}>
                 {vliver.handle}
               </p>
