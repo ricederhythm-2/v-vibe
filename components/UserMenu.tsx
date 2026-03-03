@@ -15,7 +15,7 @@ export default function UserMenu() {
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const router   = useRouter();
-  const { profile } = useMyProfile();
+  const { profile, loading: profileLoading } = useMyProfile();
 
   useEffect(() => {
     const supabase = createClient();
@@ -34,7 +34,7 @@ export default function UserMenu() {
     router.refresh();
   };
 
-  if (loading) return null;
+  if (loading || profileLoading) return null;
 
   if (!user) {
     return (
