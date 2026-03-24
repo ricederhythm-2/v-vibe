@@ -1,8 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export type ActionType =
-  | 'swipe_like'
-  | 'swipe_pass'
   | 'voice_play'
   | 'page_view'
   | 'favorite_add'

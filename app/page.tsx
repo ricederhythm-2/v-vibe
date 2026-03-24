@@ -84,11 +84,9 @@ export default function HomePage() {
         addFavorite(current.id);
         recordLike(current.tags);
         saveAction(current.id, 'like');
-        log('swipe_like', { postId: current.id });
       } else {
         recordPass(current.tags);
         saveAction(current.id, 'pass');
-        log('swipe_pass', { postId: current.id });
       }
 
       setSeenIds((prev) => new Set([...prev, current.id]));
