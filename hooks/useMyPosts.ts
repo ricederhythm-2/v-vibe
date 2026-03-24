@@ -18,7 +18,8 @@ export function useMyPosts() {
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const user = session?.user ?? null;
       if (!user) { setLoading(false); return; }
       supabase
         .from('voice_posts')
@@ -56,7 +57,8 @@ export function useMyPosts() {
     if (error) {
       console.error('deletePost:', error);
       // Re-fetch on error to restore state
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
       if (user) {
         const { data } = await supabase
           .from('voice_posts')

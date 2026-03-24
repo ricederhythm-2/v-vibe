@@ -33,7 +33,8 @@ export default function ReportModal({ vliverId, vliverName, onClose }: Props) {
     if (!canSubmit) return;
     setSubmitting(true);
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
     await supabase.from('reports').insert({
       reporter_id: user?.id ?? null,
       target_type: targetType,

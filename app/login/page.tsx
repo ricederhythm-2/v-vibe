@@ -12,7 +12,9 @@ const BRAND = '#EF5285';
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const next  = searchParams.get('next') ?? '/';
+  const rawNext = searchParams.get('next') ?? '/';
+  // /始まりの相対パスのみ許可（// や http:// へのオープンリダイレクトを防止）
+  const next = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/';
   const error = searchParams.get('error');
   const handleSignIn = async () => {
     const supabase = createClient();

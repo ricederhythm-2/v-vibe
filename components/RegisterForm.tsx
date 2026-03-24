@@ -152,12 +152,19 @@ export default function RegisterForm() {
         if (error) throw error;
       }
 
+      // platform_links のURL形式を検証してから保存
+      const sanitizedLinks = Object.fromEntries(
+        Object.entries(form.platformLinks).filter(([, url]) => {
+          try { new URL(url); return true; } catch { return false; }
+        }),
+      );
+
       if (isEditMode && profile) {
         const { error } = await supabase.from('vliver_profiles').update({
           name: form.name, handle: form.handle,
           description: form.description,
           twitter_handle: form.twitterHandle,
-          platform_links: form.platformLinks,
+          platform_links: sanitizedLinks,
           tags: form.tags, color: form.color, image_path: imagePath,
           updated_at: new Date().toISOString(),
         }).eq('id', profile.id);
@@ -167,7 +174,7 @@ export default function RegisterForm() {
           owner_id: user.id, name: form.name, handle: form.handle,
           description: form.description,
           twitter_handle: form.twitterHandle,
-          platform_links: form.platformLinks,
+          platform_links: sanitizedLinks,
           tags: form.tags, color: form.color, image_path: imagePath,
         });
         if (error) throw error;

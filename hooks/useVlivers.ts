@@ -9,7 +9,8 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
 function storageUrl(bucket: string, path: string | null | undefined): string {
   if (!path) return '';
-  if (path.startsWith('http')) return path; // 外部URL（サンプルデータ等）はそのまま返す
+  // http始まりはSupabase StorageのURLのみ許可（外部URLは拒否）
+  if (path.startsWith('http')) return path.startsWith(SUPABASE_URL) ? path : '';
   return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
 }
 
