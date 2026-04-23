@@ -34,9 +34,9 @@ export default function AgencyContent({ slug }: { slug: string }) {
   if (notFound) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 px-6 text-center">
-        <Building2 className="w-12 h-12" style={{ color: '#E0E0E0' }} />
-        <p className="font-black text-lg" style={{ color: '#111111' }}>事務所が見つかりません</p>
-        <p className="text-sm" style={{ color: '#AAAAAA' }}>URLをご確認ください</p>
+        <Building2 className="w-12 h-12" style={{ color: '#444444' }} />
+        <p className="font-black text-lg" style={{ color: '#FFFFFF' }}>事務所が見つかりません</p>
+        <p className="text-sm" style={{ color: '#666666' }}>URLをご確認ください</p>
       </div>
     );
   }
@@ -46,7 +46,7 @@ export default function AgencyContent({ slug }: { slug: string }) {
       {/* 事務所ヘッダー */}
       <div
         className="px-5 pt-6 pb-5"
-        style={{ background: 'linear-gradient(160deg, #FFF0F5 0%, #FFFFFF 100%)', borderBottom: '1px solid #F0F0F0' }}
+        style={{ background: 'linear-gradient(160deg, #1A1218 0%, #1A1A1A 100%)', borderBottom: '1px solid #2A2A2A' }}
       >
         <div className="flex items-center gap-4 mb-3">
           <div
@@ -58,7 +58,7 @@ export default function AgencyContent({ slug }: { slug: string }) {
             </span>
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl font-black leading-tight" style={{ color: '#111111' }}>
+            <h1 className="text-xl font-black leading-tight" style={{ color: '#FFFFFF' }}>
               {agency?.name}
             </h1>
             {agency?.twitter_handle && (
@@ -67,7 +67,7 @@ export default function AgencyContent({ slug }: { slug: string }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs mt-0.5 w-fit"
-                style={{ color: '#AAAAAA' }}
+                style={{ color: '#666666' }}
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.258 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -78,13 +78,13 @@ export default function AgencyContent({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <p className="text-sm leading-relaxed mb-3" style={{ color: '#555555' }}>
+        <p className="text-sm leading-relaxed mb-3" style={{ color: '#AAAAAA' }}>
           {agency?.description}
         </p>
 
         <span
           className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full"
-          style={{ background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }}
+          style={{ background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }}
         >
           {vlivers.length}人のタレントが在籍
         </span>
@@ -128,12 +128,12 @@ function VliverCard({
   return (
     <div
       className="rounded-2xl overflow-hidden"
-      style={{ background: '#FFFFFF', border: '1px solid #E8E8E8', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+      style={{ background: '#1A1A1A', border: '1px solid #333333', boxShadow: '0 1px 4px rgba(0,0,0,0.4)' }}
     >
       {/* 上部：画像 + プロフィール */}
       <div className="flex">
         <div style={{ width: 3, flexShrink: 0, background: BRAND }} />
-        <div className="w-20 h-28 flex-shrink-0 relative" style={{ background: '#FFF5F8' }}>
+        <div className="w-20 h-28 flex-shrink-0 relative" style={{ background: '#1E1218' }}>
           <img
             src={vliver.imageUrl || undefined}
             alt={vliver.name}
@@ -144,7 +144,7 @@ function VliverCard({
         <div className="flex-1 px-3 py-2.5 flex flex-col justify-between min-w-0">
           <div>
             <div className="flex items-center gap-1.5 mb-0.5">
-              <h2 className="font-black text-[15px] leading-tight truncate flex-1" style={{ color: '#111111' }}>
+              <h2 className="font-black text-[15px] leading-tight truncate flex-1" style={{ color: '#FFFFFF' }}>
                 {vliver.name}
               </h2>
               {vliver.voices.some((v) => v.is_boosted) && (
@@ -157,7 +157,7 @@ function VliverCard({
                 </span>
               )}
             </div>
-            <p className="text-[11px] font-mono truncate mb-1.5" style={{ color: '#AAAAAA' }}>
+            <p className="text-[11px] font-mono truncate mb-1.5" style={{ color: '#666666' }}>
               {vliver.handle}
             </p>
             <div className="flex flex-wrap gap-1">
@@ -165,7 +165,7 @@ function VliverCard({
                 <span
                   key={tag}
                   className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                  style={{ background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }}
+                  style={{ background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }}
                 >
                   #{tag}
                 </span>
@@ -207,7 +207,7 @@ function VliverCard({
       </div>
 
       {/* 下部：ボイスリスト */}
-      <div style={{ borderTop: '1px solid #F0F0F0' }}>
+      <div style={{ borderTop: '1px solid #2A2A2A' }}>
         {vliver.voices.map((voice) => {
           const isPlaying = playingId === voice.id;
           const isFaved   = likedIds.has(voice.id);
@@ -215,9 +215,9 @@ function VliverCard({
             <div
               key={voice.id}
               className="px-4 py-2.5"
-              style={{ borderBottom: '1px solid #F8F8F8' }}
+              style={{ borderBottom: '1px solid #252525' }}
             >
-              <p className="text-xs leading-snug line-clamp-2 mb-2" style={{ color: '#555555' }}>
+              <p className="text-xs leading-snug line-clamp-2 mb-2" style={{ color: '#AAAAAA' }}>
                 「{voice.catchphrase}」
               </p>
               <div className="flex items-center gap-2">
@@ -227,7 +227,7 @@ function VliverCard({
                   style={
                     isPlaying
                       ? { background: BRAND, color: '#fff', boxShadow: `0 2px 8px ${BRAND}40` }
-                      : { background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }
+                      : { background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }
                   }
                 >
                   {isPlaying ? (
@@ -257,11 +257,11 @@ function VliverCard({
                   className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold flex-shrink-0 transition-all hover:scale-105 active:scale-95"
                   style={
                     isFaved
-                      ? { background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }
-                      : { background: '#FFFFFF', color: '#AAAAAA', border: '1px solid #E8E8E8' }
+                      ? { background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }
+                      : { background: '#1A1A1A', color: '#666666', border: '1px solid #333333' }
                   }
                 >
-                  <Heart className="w-2.5 h-2.5" style={{ fill: isFaved ? BRAND : 'none', color: isFaved ? BRAND : '#AAAAAA' }} />
+                  <Heart className="w-2.5 h-2.5" style={{ fill: isFaved ? BRAND : 'none', color: isFaved ? BRAND : '#666666' }} />
                   {isFaved ? 'お気に入り済み' : 'お気に入り'}
                 </button>
               </div>
@@ -276,36 +276,36 @@ function VliverCard({
 function AgencySkeleton() {
   return (
     <div className="w-full max-w-[430px] mx-auto pb-16 animate-pulse">
-      <div className="px-5 pt-6 pb-5" style={{ borderBottom: '1px solid #F0F0F0' }}>
+      <div className="px-5 pt-6 pb-5" style={{ borderBottom: '1px solid #2A2A2A' }}>
         <div className="flex items-center gap-4 mb-3">
-          <div className="w-14 h-14 rounded-2xl" style={{ background: '#F0F0F0' }} />
+          <div className="w-14 h-14 rounded-2xl" style={{ background: '#2A2A2A' }} />
           <div className="flex flex-col gap-1.5">
-            <div className="h-5 w-28 rounded-full" style={{ background: '#F0F0F0' }} />
-            <div className="h-3 w-20 rounded-full" style={{ background: '#F5F5F5' }} />
+            <div className="h-5 w-28 rounded-full" style={{ background: '#2A2A2A' }} />
+            <div className="h-3 w-20 rounded-full" style={{ background: '#222222' }} />
           </div>
         </div>
-        <div className="h-3 w-full rounded-full mb-1.5" style={{ background: '#F5F5F5' }} />
-        <div className="h-3 w-3/4 rounded-full mb-3" style={{ background: '#F5F5F5' }} />
-        <div className="h-6 w-32 rounded-full" style={{ background: '#F0F0F0' }} />
+        <div className="h-3 w-full rounded-full mb-1.5" style={{ background: '#222222' }} />
+        <div className="h-3 w-3/4 rounded-full mb-3" style={{ background: '#222222' }} />
+        <div className="h-6 w-32 rounded-full" style={{ background: '#2A2A2A' }} />
       </div>
       <div className="px-4 pt-4 space-y-3">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E8E8' }}>
+          <div key={i} className="rounded-2xl overflow-hidden" style={{ border: '1px solid #333333' }}>
             <div className="flex">
-              <div style={{ width: 3, background: '#F0F0F0' }} />
-              <div className="w-20 h-28 flex-shrink-0" style={{ background: '#F5F5F5' }} />
+              <div style={{ width: 3, background: '#2A2A2A' }} />
+              <div className="w-20 h-28 flex-shrink-0" style={{ background: '#222222' }} />
               <div className="flex-1 px-3 py-2.5 flex flex-col gap-2">
-                <div className="h-4 w-24 rounded-full" style={{ background: '#F0F0F0' }} />
-                <div className="h-3 w-16 rounded-full" style={{ background: '#F5F5F5' }} />
+                <div className="h-4 w-24 rounded-full" style={{ background: '#2A2A2A' }} />
+                <div className="h-3 w-16 rounded-full" style={{ background: '#222222' }} />
                 <div className="flex gap-1">
-                  <div className="h-4 w-10 rounded-full" style={{ background: '#F0F0F0' }} />
-                  <div className="h-4 w-10 rounded-full" style={{ background: '#F0F0F0' }} />
+                  <div className="h-4 w-10 rounded-full" style={{ background: '#2A2A2A' }} />
+                  <div className="h-4 w-10 rounded-full" style={{ background: '#2A2A2A' }} />
                 </div>
               </div>
             </div>
-            <div className="px-4 py-2.5" style={{ borderTop: '1px solid #F0F0F0' }}>
-              <div className="h-3 w-full rounded-full mb-2" style={{ background: '#F5F5F5' }} />
-              <div className="h-6 w-20 rounded-full" style={{ background: '#F0F0F0' }} />
+            <div className="px-4 py-2.5" style={{ borderTop: '1px solid #2A2A2A' }}>
+              <div className="h-3 w-full rounded-full mb-2" style={{ background: '#222222' }} />
+              <div className="h-6 w-20 rounded-full" style={{ background: '#2A2A2A' }} />
             </div>
           </div>
         ))}

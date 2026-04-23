@@ -117,7 +117,7 @@ export default function SwipeFeed({ priorityPostId }: { priorityPostId?: string 
   }, [stopCurrentAudio]);
 
   return (
-    <div className="h-dvh overflow-hidden flex flex-col" style={{ background: '#FFFFFF', overscrollBehavior: 'none' }}>
+    <div className="h-dvh overflow-hidden flex flex-col" style={{ background: '#0D0D0D', overscrollBehavior: 'none' }}>
 
       {/* ヘッダー */}
       <AppHeader />
@@ -126,10 +126,10 @@ export default function SwipeFeed({ priorityPostId }: { priorityPostId?: string 
       <main className="flex-1 min-h-0 w-full max-w-[430px] mx-auto px-4 pt-4">
         <div className="relative w-full h-full">
           {loading ? (
-            <div className="absolute inset-0 rounded-3xl animate-pulse" style={{ background: '#F5F5F5', border: '1px solid #E8E8E8' }}>
+            <div className="absolute inset-0 rounded-3xl animate-pulse" style={{ background: '#1A1A1A', border: '1px solid #333333' }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                <Sparkles className="w-8 h-8" style={{ color: '#DDDDDD' }} />
-                <p className="text-xs" style={{ color: '#AAAAAA' }}>Vライバーを読み込み中…</p>
+                <Sparkles className="w-8 h-8" style={{ color: '#444444' }} />
+                <p className="text-xs" style={{ color: '#666666' }}>Vライバーを読み込み中…</p>
               </div>
             </div>
           ) : !isFinished ? (
@@ -138,7 +138,7 @@ export default function SwipeFeed({ priorityPostId }: { priorityPostId?: string 
               {next && (
                 <div
                   className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none"
-                  style={{ transform: 'scale(0.93) translateY(14px)', opacity: 0.4, background: '#FFFFFF', border: '1px solid #E8E8E8' }}
+                  style={{ transform: 'scale(0.93) translateY(14px)', opacity: 0.4, background: '#1A1A1A', border: '1px solid #333333' }}
                 />
               )}
 
@@ -164,13 +164,13 @@ export default function SwipeFeed({ priorityPostId }: { priorityPostId?: string 
             <div className="flex flex-col items-center justify-center h-full gap-5 text-center px-4">
               <div
                 className="w-20 h-20 rounded-full flex items-center justify-center"
-                style={{ background: `${BRAND}15`, border: `2px solid ${BRAND}30` }}
+                style={{ background: `${BRAND}20`, border: `2px solid ${BRAND}40` }}
               >
                 <Heart className="w-9 h-9" style={{ color: BRAND, fill: BRAND }} />
               </div>
               <div>
-                <h2 className="text-2xl font-black" style={{ color: '#111111' }}>全員チェック完了！</h2>
-                <p className="text-sm mt-2 leading-relaxed" style={{ color: '#555555' }}>
+                <h2 className="text-2xl font-black" style={{ color: '#FFFFFF' }}>全員チェック完了！</h2>
+                <p className="text-sm mt-2 leading-relaxed" style={{ color: '#AAAAAA' }}>
                   {likedCount > 0
                     ? `${likedCount}人のVライバーをお気に入りに追加しました`
                     : 'まだ誰もお気に入りしていません。'}
@@ -190,7 +190,7 @@ export default function SwipeFeed({ priorityPostId }: { priorityPostId?: string 
                 <button
                   onClick={handleReset}
                   className="flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all hover:scale-105"
-                  style={{ color: '#555555', border: '1px solid #E8E8E8', background: '#FFFFFF' }}
+                  style={{ color: '#AAAAAA', border: '1px solid #333333', background: '#1A1A1A' }}
                 >
                   <RotateCcw className="w-4 h-4" />
                   もう一度見る
@@ -207,7 +207,7 @@ export default function SwipeFeed({ priorityPostId }: { priorityPostId?: string 
           <button
             onClick={() => handleButtonSwipe('left')}
             className="w-14 h-14 rounded-full flex items-center justify-center transition-all active:scale-90 hover:scale-105"
-            style={{ background: '#FFFFFF', border: '1px solid #E8E8E8', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+            style={{ background: '#1A1A1A', border: '1px solid #333333', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
             aria-label="パス"
           >
             <X className="w-6 h-6" style={{ color: '#AAAAAA' }} />

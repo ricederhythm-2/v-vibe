@@ -3,13 +3,13 @@
 :root {
   --vv-brand:   #EF5285;
   --vv-boost:   #FEEE7D;
-  --vv-bg:      #FFFFFF;
-  --vv-surface: #FFFFFF;
-  --vv-divider: #F0F0F0;
-  --vv-border:  #E8E8E8;
-  --vv-t1:      #111111;
-  --vv-t2:      #555555;
-  --vv-t3:      #AAAAAA;
+  --vv-bg:      #0D0D0D;
+  --vv-surface: #1A1A1A;
+  --vv-divider: #2A2A2A;
+  --vv-border:  #333333;
+  --vv-t1:      #FFFFFF;
+  --vv-t2:      #AAAAAA;
+  --vv-t3:      #666666;
 }
 
 @theme inline {
