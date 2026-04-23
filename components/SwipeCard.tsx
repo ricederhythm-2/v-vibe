@@ -20,7 +20,7 @@ import { Play, Pause, Zap, Flag, Share2 } from 'lucide-react';
 import ReportModal from '@/components/ReportModal';
 import { shareVoice } from '@/lib/share';
 
-const BRAND  = '#EF5285';
+const BRAND  = '#E8344F';
 const BOOST  = '#FEEE7D';
 
 export interface VLiver {
@@ -157,13 +157,13 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
           <div
             className="relative w-full h-full rounded-3xl overflow-hidden flex flex-col"
             style={{
-              background: '#1A1A1A',
-              boxShadow: '0 4px 24px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.4)',
-              border: '1px solid #333333',
+              background: '#FFFFFF',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+              border: '1px solid #E8E8E8',
             }}
           >
             {/* 立ち絵エリア（残りを全て埋める） */}
-            <div className="relative flex-1" style={{ background: '#1E1218' }}>
+            <div className="relative flex-1" style={{ background: '#FFF5F8' }}>
               <img
                 src={vliver.imageUrl || undefined}
                 alt={vliver.name}
@@ -240,31 +240,31 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
             {/* 下部情報エリア（コンテンツ高さのみ） */}
             <div
               className="flex-shrink-0 px-5 pt-4 pb-4"
-              style={{ borderTop: '1px solid #2A2A2A' }}
+              style={{ borderTop: '1px solid #F0F0F0' }}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
                   {recommendBadge && (
                     <div className="mb-2">{recommendBadge}</div>
                   )}
-                  <h2 className="font-black text-[20px] tracking-tight leading-tight" style={{ color: '#FFFFFF' }}>
+                  <h2 className="font-black text-[20px] tracking-tight leading-tight" style={{ color: '#111111' }}>
                     {vliver.name}
                   </h2>
                 </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); setReportOpen(true); }}
                   className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 transition-all hover:scale-110 active:scale-95"
-                  style={{ background: '#252525' }}
+                  style={{ background: '#F5F5F5' }}
                   aria-label="通報する"
                 >
                   <Flag className="w-3.5 h-3.5" style={{ color: '#AAAAAA' }} />
                 </button>
               </div>
-              <p className="text-xs font-mono mt-0.5" style={{ color: '#666666' }}>
+              <p className="text-xs font-mono mt-0.5" style={{ color: '#AAAAAA' }}>
                 {vliver.handle}
               </p>
               {vliver.description && (
-                <p className="text-xs mt-1.5 leading-relaxed line-clamp-3" style={{ color: '#AAAAAA' }}>
+                <p className="text-xs mt-1.5 leading-relaxed line-clamp-3" style={{ color: '#555555' }}>
                   {vliver.description}
                 </p>
               )}
@@ -277,9 +277,9 @@ const SwipeCard = forwardRef<SwipeCardHandle, Props>(
                       key={tag}
                       className="text-[11px] px-2 py-0.5 rounded-full font-semibold"
                       style={{
-                        background: `${BRAND}20`,
+                        background: `${BRAND}12`,
                         color: BRAND,
-                        border: `1px solid ${BRAND}40`,
+                        border: `1px solid ${BRAND}25`,
                       }}
                     >
                       #{tag}

@@ -11,7 +11,7 @@ import { useVlivers } from '@/hooks/useVlivers';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import type { VLiver } from '@/components/SwipeCard';
 
-const BRAND = '#EF5285';
+const BRAND = '#E8344F';
 const BOOST = '#FEEE7D';
 
 export default function FavoritesList() {
@@ -51,7 +51,7 @@ export default function FavoritesList() {
 
   return (
     <div className="w-full max-w-[430px] mx-auto px-4 pt-4 pb-12">
-      <p className="text-right text-xs mb-2" style={{ color: '#666666' }}>
+      <p className="text-right text-xs mb-2" style={{ color: '#AAAAAA' }}>
         {groups.length}人 · {totalVoices}ボイスをお気に入り中
       </p>
 
@@ -94,9 +94,9 @@ function VliverGroupCard({
       <div
         className="rounded-2xl overflow-hidden"
         style={{
-          background: '#1A1A1A',
-          border: '1px solid #333333',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+          background: '#FFFFFF',
+          border: '1px solid #E8E8E8',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
         }}
       >
         {/* 上部：画像 + プロフィール情報（固定高さ） */}
@@ -104,7 +104,7 @@ function VliverGroupCard({
           <div style={{ width: 3, flexShrink: 0, background: BRAND }} />
 
           {/* キャラクター画像（固定高さ） */}
-          <div className="w-20 h-28 flex-shrink-0 relative" style={{ background: '#1E1218' }}>
+          <div className="w-20 h-28 flex-shrink-0 relative" style={{ background: '#FFF5F8' }}>
             <img
               src={profile.imageUrl || undefined}
               alt={profile.name}
@@ -117,7 +117,7 @@ function VliverGroupCard({
           <div className="flex-1 px-3 py-2.5 flex flex-col justify-between min-w-0">
             <div>
               <div className="flex items-center gap-1.5 mb-0.5">
-                <h3 className="font-black text-[15px] leading-tight truncate flex-1" style={{ color: '#FFFFFF' }}>
+                <h3 className="font-black text-[15px] leading-tight truncate flex-1" style={{ color: '#111111' }}>
                   {profile.name}
                 </h3>
                 {voices.some((v) => v.is_boosted) && (
@@ -130,7 +130,7 @@ function VliverGroupCard({
                   </span>
                 )}
               </div>
-              <p className="text-[11px] font-mono truncate mb-1.5" style={{ color: '#666666' }}>
+              <p className="text-[11px] font-mono truncate mb-1.5" style={{ color: '#AAAAAA' }}>
                 {profile.handle}
               </p>
               <div className="flex flex-wrap gap-1">
@@ -138,7 +138,7 @@ function VliverGroupCard({
                   <span
                     key={tag}
                     className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                    style={{ background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }}
+                    style={{ background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }}
                   >
                     #{tag}
                   </span>
@@ -181,7 +181,7 @@ function VliverGroupCard({
         </div>
 
         {/* 下部：ボイスリスト（全幅） */}
-        <div style={{ borderTop: '1px solid #2A2A2A' }}>
+        <div style={{ borderTop: '1px solid #F0F0F0' }}>
           <AnimatePresence initial={false}>
             {voices.map((v) => (
               <motion.div
@@ -191,10 +191,10 @@ function VliverGroupCard({
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
                 transition={{ duration: 0.2 }}
-                style={{ borderBottom: '1px solid #252525' }}
+                style={{ borderBottom: '1px solid #F8F8F8' }}
               >
                 <div className="px-4 py-2.5">
-                  <p className="text-xs leading-snug line-clamp-2 mb-2" style={{ color: '#AAAAAA' }}>
+                  <p className="text-xs leading-snug line-clamp-2 mb-2" style={{ color: '#555555' }}>
                     「{v.catchphrase}」
                   </p>
                   <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ function VliverGroupCard({
                       style={
                         playingId === v.id
                           ? { background: BRAND, color: '#fff', boxShadow: `0 2px 8px ${BRAND}40` }
-                          : { background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }
+                          : { background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }
                       }
                     >
                       {playingId === v.id ? (
@@ -241,7 +241,7 @@ function VliverGroupCard({
                     <button
                       onClick={() => onRemove(v.id)}
                       className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold flex-shrink-0 transition-all active:scale-95 hover:scale-105"
-                      style={{ color: '#666666', border: '1px solid #333333', background: '#1A1A1A' }}
+                      style={{ color: '#AAAAAA', border: '1px solid #E8E8E8', background: '#FFFFFF' }}
                       aria-label="お気に入りから外す"
                     >
                       <HeartCrack className="w-2.5 h-2.5" />
@@ -261,24 +261,24 @@ function VliverGroupCard({
 function FavoritesListSkeleton() {
   return (
     <div className="w-full max-w-[430px] mx-auto px-4 pt-4 pb-12">
-      <div className="h-4 w-32 rounded-full mb-2 ml-auto animate-pulse" style={{ background: '#2A2A2A' }} />
+      <div className="h-4 w-32 rounded-full mb-2 ml-auto animate-pulse" style={{ background: '#F0F0F0' }} />
       {[...Array(3)].map((_, i) => (
         <div
           key={i}
           className="mb-3 flex rounded-2xl overflow-hidden animate-pulse"
-          style={{ background: '#1A1A1A', border: '1px solid #333333', boxShadow: '0 1px 4px rgba(0,0,0,0.4)' }}
+          style={{ background: '#FFFFFF', border: '1px solid #E8E8E8', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
         >
-          <div style={{ width: 3, flexShrink: 0, background: '#2A2A2A' }} />
-          <div className="w-24 flex-shrink-0" style={{ background: '#222222', minHeight: 160 }} />
+          <div style={{ width: 3, flexShrink: 0, background: '#F0F0F0' }} />
+          <div className="w-24 flex-shrink-0" style={{ background: '#F5F5F5', minHeight: 160 }} />
           <div className="flex-1 px-3 py-3 flex flex-col gap-2">
-            <div className="h-4 w-28 rounded-full" style={{ background: '#2A2A2A' }} />
-            <div className="h-3 w-20 rounded-full" style={{ background: '#222222' }} />
+            <div className="h-4 w-28 rounded-full" style={{ background: '#F0F0F0' }} />
+            <div className="h-3 w-20 rounded-full" style={{ background: '#F5F5F5' }} />
             <div className="flex gap-1">
-              <div className="h-4 w-12 rounded-full" style={{ background: '#2A2A2A' }} />
-              <div className="h-4 w-12 rounded-full" style={{ background: '#2A2A2A' }} />
+              <div className="h-4 w-12 rounded-full" style={{ background: '#F0F0F0' }} />
+              <div className="h-4 w-12 rounded-full" style={{ background: '#F0F0F0' }} />
             </div>
-            <div className="h-8 w-full rounded-xl" style={{ background: '#222222' }} />
-            <div className="h-8 w-full rounded-xl" style={{ background: '#222222' }} />
+            <div className="h-8 w-full rounded-xl" style={{ background: '#F5F5F5' }} />
+            <div className="h-8 w-full rounded-xl" style={{ background: '#F5F5F5' }} />
           </div>
         </div>
       ))}
@@ -293,16 +293,16 @@ function EmptyState() {
         animate={{ scale: [1, 1.06, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         className="w-20 h-20 rounded-full flex items-center justify-center"
-        style={{ background: `${BRAND}18`, border: `1.5px solid ${BRAND}40` }}
+        style={{ background: `${BRAND}10`, border: `1.5px solid ${BRAND}40` }}
       >
         <Sparkles className="w-9 h-9" style={{ color: `${BRAND}60` }} />
       </motion.div>
 
       <div>
-        <h2 className="text-xl font-black" style={{ color: '#FFFFFF' }}>
+        <h2 className="text-xl font-black" style={{ color: '#111111' }}>
           まだお気に入りがいません
         </h2>
-        <p className="text-sm mt-2 leading-relaxed" style={{ color: '#AAAAAA' }}>
+        <p className="text-sm mt-2 leading-relaxed" style={{ color: '#555555' }}>
           スワイプしてピンとくる声に<br />出会いましょう
         </p>
       </div>

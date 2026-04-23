@@ -7,7 +7,7 @@ import { Play, Pause, Pencil, Trash2, Check, X, Mic, ArrowRight, Heart } from 'l
 import { useMyPosts, type VoicePost } from '@/hooks/useMyPosts';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 
-const BRAND = '#EF5285';
+const BRAND = '#E8344F';
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
 function voiceUrl(voice_path: string) {
@@ -34,7 +34,7 @@ export default function MyPostsList() {
 
   return (
     <div className="w-full max-w-[430px] mx-auto px-4 pt-4 pb-12">
-      <p className="text-right text-xs mb-2" style={{ color: '#666666' }}>
+      <p className="text-right text-xs mb-2" style={{ color: '#AAAAAA' }}>
         {posts.length}件の投稿
       </p>
 
@@ -103,9 +103,9 @@ function PostCard({
       <div
         className="rounded-2xl overflow-hidden"
         style={{
-          background: '#1A1A1A',
-          border: '1px solid #333333',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+          background: '#FFFFFF',
+          border: '1px solid #E8E8E8',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
         }}
       >
         <div className="flex">
@@ -116,12 +116,12 @@ function PostCard({
           <div className="flex-1 px-3 py-3 min-w-0">
             {/* 投稿日 + いいね数 */}
             <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[10px]" style={{ color: '#666666' }}>
+              <p className="text-[10px]" style={{ color: '#AAAAAA' }}>
                 {dateLabel}
                 {!post.is_published && (
                   <span
                     className="ml-2 px-1.5 py-0.5 rounded-full text-[9px] font-bold"
-                    style={{ background: '#3A3000', color: '#FEEE7D' }}
+                    style={{ background: '#FFF3CD', color: '#856404' }}
                   >
                     非公開
                   </span>
@@ -145,8 +145,8 @@ function PostCard({
                   className="flex-1 text-sm px-2.5 py-1.5 rounded-lg border outline-none min-w-0"
                   style={{
                     borderColor: BRAND,
-                    color: '#FFFFFF',
-                    background: '#1A1A1A',
+                    color: '#111111',
+                    background: '#FFFFFF',
                     boxShadow: `0 0 0 2px ${BRAND}20`,
                   }}
                 />
@@ -161,10 +161,10 @@ function PostCard({
                 <button
                   onClick={handleCancel}
                   className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all hover:scale-110 active:scale-95"
-                  style={{ background: '#333333' }}
+                  style={{ background: '#F0F0F0' }}
                   aria-label="キャンセル"
                 >
-                  <X className="w-3.5 h-3.5" style={{ color: '#AAAAAA' }} />
+                  <X className="w-3.5 h-3.5" style={{ color: '#555555' }} />
                 </button>
               </div>
             ) : (
@@ -173,7 +173,7 @@ function PostCard({
                 className="flex items-center gap-1.5 mb-2 group text-left w-full"
                 aria-label="キャッチコピーを編集"
               >
-                <p className="text-sm leading-snug flex-1" style={{ color: '#FFFFFF' }}>
+                <p className="text-sm leading-snug flex-1" style={{ color: '#111111' }}>
                   「{post.catch_copy}」
                 </p>
                 <Pencil
@@ -191,7 +191,7 @@ function PostCard({
                 style={
                   isPlaying
                     ? { background: BRAND, color: '#fff', boxShadow: `0 2px 8px ${BRAND}40` }
-                    : { background: `${BRAND}20`, color: BRAND, border: `1px solid ${BRAND}40` }
+                    : { background: `${BRAND}12`, color: BRAND, border: `1px solid ${BRAND}25` }
                 }
               >
                 {isPlaying ? (
@@ -220,7 +220,7 @@ function PostCard({
               <button
                 onClick={onDelete}
                 className="ml-auto flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-bold transition-all active:scale-95 hover:scale-105"
-                style={{ color: '#666666', border: '1px solid #333333', background: '#1A1A1A' }}
+                style={{ color: '#AAAAAA', border: '1px solid #E8E8E8', background: '#FFFFFF' }}
                 aria-label="投稿を削除"
               >
                 <Trash2 className="w-3 h-3" />
@@ -241,16 +241,16 @@ function EmptyState() {
         animate={{ scale: [1, 1.06, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         className="w-20 h-20 rounded-full flex items-center justify-center"
-        style={{ background: `${BRAND}18`, border: `1.5px solid ${BRAND}40` }}
+        style={{ background: `${BRAND}10`, border: `1.5px solid ${BRAND}40` }}
       >
         <Mic className="w-9 h-9" style={{ color: `${BRAND}60` }} />
       </motion.div>
 
       <div>
-        <h2 className="text-xl font-black" style={{ color: '#FFFFFF' }}>
+        <h2 className="text-xl font-black" style={{ color: '#111111' }}>
           まだ投稿がありません
         </h2>
-        <p className="text-sm mt-2 leading-relaxed" style={{ color: '#AAAAAA' }}>
+        <p className="text-sm mt-2 leading-relaxed" style={{ color: '#555555' }}>
           ボイスを投稿して<br />リスナーに届けましょう
         </p>
       </div>

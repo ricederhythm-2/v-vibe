@@ -7,7 +7,7 @@ import { useMyProfile } from '@/hooks/useMyProfile';
 import NotificationBell from '@/components/NotificationBell';
 import UserMenu from '@/components/UserMenu';
 
-const BRAND = '#EF5285';
+const BRAND = '#E8344F';
 
 export default function AppHeader({ showBack = false }: { showBack?: boolean }) {
   const { likedIds }                  = useFavorites();
@@ -15,16 +15,16 @@ export default function AppHeader({ showBack = false }: { showBack?: boolean }) 
   const likedCount         = likedIds.size;
 
   return (
-    <header className="w-full flex-shrink-0 sticky top-0 z-40 bg-[#0D0D0D]" style={{ borderBottom: '1px solid #2A2A2A' }}>
+    <header className="w-full flex-shrink-0 sticky top-0 z-40 bg-white" style={{ borderBottom: '1px solid #F0F0F0' }}>
       <div className="w-full max-w-[430px] mx-auto flex items-center justify-between px-5 pt-5 pb-4">
         {showBack ? (
           <Link
             href="/"
             className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-110 flex-shrink-0"
-            style={{ border: '1px solid #333333', background: '#1A1A1A' }}
+            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
             aria-label="ホームに戻る"
           >
-            <ArrowLeft className="w-4 h-4" style={{ color: '#AAAAAA' }} />
+            <ArrowLeft className="w-4 h-4" style={{ color: '#555555' }} />
           </Link>
         ) : (
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
@@ -36,7 +36,7 @@ export default function AppHeader({ showBack = false }: { showBack?: boolean }) 
           <Link
             href="/favorites"
             className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-all hover:scale-105"
-            style={{ border: '1px solid #333333', background: '#1A1A1A' }}
+            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
             aria-label="お気に入り"
           >
             <Heart className="w-3.5 h-3.5" style={{ color: BRAND, fill: BRAND }} />
@@ -49,19 +49,19 @@ export default function AppHeader({ showBack = false }: { showBack?: boolean }) 
             <Link
               href="/register"
               className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-              style={{ border: '1px solid #333333', background: '#1A1A1A' }}
+              style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
               aria-label="Vライバー登録"
             >
-              <UserPlus className="w-3.5 h-3.5" style={{ color: '#AAAAAA' }} />
+              <UserPlus className="w-3.5 h-3.5" style={{ color: '#555555' }} />
             </Link>
           )}
           <Link
             href="/post"
             className="w-8 h-8 flex items-center justify-center rounded-full transition-all hover:scale-105"
-            style={{ border: '1px solid #333333', background: '#1A1A1A' }}
+            style={{ border: '1px solid #E8E8E8', background: '#FFFFFF' }}
             aria-label="ボイス投稿"
           >
-            <Mic className="w-3.5 h-3.5" style={{ color: '#AAAAAA' }} />
+            <Mic className="w-3.5 h-3.5" style={{ color: '#555555' }} />
           </Link>
           <NotificationBell />
           <UserMenu />
